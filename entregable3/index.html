@@ -1,80 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLOCKA - Juego de Rompecabezas</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLOCKA - Juego con Canvas</title>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎮 BLOCKA</h1>
-            <p>Rompecabezas de Imágenes Rotadas</p>
-        </div>
-
-        <div class="game-container">
-            <!-- MENU PRINCIPAL -->
-            <div class="menu-screen active">
-                <div class="instructions">
-                    <h3>📖 Instrucciones</h3>
-                    <ul>
-                        <li><strong>Objetivo:</strong> Rotar todas las piezas hasta formar la imagen completa</li>
-                        <li><strong>Click Izquierdo:</strong> Rotar pieza a la izquierda (90°)</li>
-                        <li><strong>Click Derecho:</strong> Rotar pieza a la derecha (90°)</li>
-                        <li><strong>Filtros:</strong> Las imágenes tienen filtros que se quitan al completar</li>
-                        <li><strong>Ayudita:</strong> Resuelve una pieza automáticamente (+5 segundos)</li>
-                    </ul>
-                </div>
-                
-                <div class="menu-buttons">
-                    <button class="btn btn-primary" onclick="game.startGame()">🎯 Comenzar Juego</button>
-                    <button class="btn btn-secondary" onclick="game.showInstructions()">📚 Ver Instrucciones Detalladas</button>
-                </div>
-            </div>
-
-            <!-- PANTALLA DE JUEGO -->
-            <div class="game-screen">
-                <div class="game-info">
-                    <div class="level-info">
-                        Nivel: <span id="currentLevel">1</span> / 3
-                    </div>
-                    <div class="timer">
-                        ⏱️ <span id="timerDisplay">00:00</span>
-                        <span class="help-penalty" id="penalty" style="display: none;"></span>
-                    </div>
-                    <div class="control-buttons">
-                        <button class="btn btn-help" onclick="game.useHelp()">💡 Ayudita</button>
-                        <button class="btn btn-secondary" onclick="game.backToMenu()">🏠 Menú</button>
-                    </div>
-                </div>
-
-                <div class="preview-container">
-                    <p><strong>Imagen a resolver:</strong></p>
-                    <img id="previewImage" class="preview-image" src="" alt="Preview">
-                </div>
-
-                <div class="game-board" id="gameBoard"></div>
-            </div>
-
-            <!-- PANTALLA DE VICTORIA -->
-            <div class="win-screen">
-                <div class="win-message">
-                    <h2>🎉 ¡Felicitaciones!</h2>
-                    <p>Has completado el nivel <span id="winLevel"></span></p>
-                    <div class="win-time">
-                        Tiempo: <span id="winTime"></span>
-                    </div>
-                    <img id="winImage" class="preview-image" src="" alt="Imagen completada">
-                    <div class="win-buttons">
-                        <button class="btn btn-secondary" onclick="game.backToMenu()">🏠 Menú Principal</button>
-                        <button class="btn btn-success" onclick="game.nextLevel()">➡️ Siguiente Nivel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/scripts.js"></script>
+<body style="margin:0; overflow:hidden; background:#111;">
+  <canvas id="gameCanvas" width="800" height="800"></canvas>
+  <script src="js/scripts.js"></script>
 </body>
 </html>
