@@ -2467,7 +2467,7 @@ body {
         vertical-align: middle;
     }
 
-    .imagenJuego {
+    #gameCanvas {
         max-width: 1200px;
         height: 600px;
         display: block;
