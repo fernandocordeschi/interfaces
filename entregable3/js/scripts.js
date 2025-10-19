@@ -5,118 +5,137 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// Estados del juego
 let gameState = "menu"; // "menu", "playing", "win"
 let currentLevel = 1;
-let maxLevels = 3;
-let timer = 0;
-let timerInterval;
 let pieces = [];
 let image = new Image();
-let imageLoaded = false;
+let currentFilter = null;
 
-// ===================================================
-// 🎨 UTILIDADES
-// ===================================================
-function drawText(text, x, y, size = 30, color = "#fff", align = "center") {
-  ctx.fillStyle = color;
-  ctx.font = `${size}px Arial`;
-  ctx.textAlign = align;
-  ctx.fillText(text, x, y);
-}
+// Elementos del DOM
+const menuScreen = document.getElementById("menuScreen");
+const winScreen = document.getElementById("winScreen");
+const winLevel = document.getElementById("winLevel");
+const startBtn = document.getElementById("startBtn");
+const nextLevelBtn = document.getElementById("nextLevelBtn");
+const backToMenuBtn = document.getElementById("backToMenuBtn");
 
-function clearCanvas() {
-  ctx.fillStyle = "#222";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+// Imagen base
+const images = [
+  "images/simpsons1.jpg",
+  "images/simpsons2.jpg",
+  "images/simpsons3.jpg",
+  "images/simpsons4.jpg",
+  "images/simpsons5.jpg",
+];
 
-// ===================================================
-// 🕹️ ESTADOS DEL JUEGO
-// ===================================================
-function drawMenu() {
-  clearCanvas();
-  drawText("🎮 BLOCKA", canvas.width / 2, 150, 60, "#ffcc00");
-  drawText("Haz clic para comenzar", canvas.width / 2, 300, 30, "#fff");
+// ---------------------------------------------------
+// 🎮 INICIO DEL JUEGO
+// ---------------------------------------------------
+startBtn.addEventListener("click", () => {
+  menuScreen.style.display = "none";
+  canvas.style.display = "block";
+  winScreen.style.display = "none";
+  startLevel(currentLevel);
+});
 
-  drawText("Instrucciones:", canvas.width / 2, 400, 24, "#aaa");
-  drawText("🖱️ Izquierdo: Gira a la izquierda", canvas.width / 2, 440, 20, "#aaa");
-  drawText("🖱️ Derecho: Gira a la derecha", canvas.width / 2, 470, 20, "#aaa");
-}
+nextLevelBtn.addEventListener("click", () => {
+  winScreen.style.display = "none";
 
-function drawGame() {
-  clearCanvas();
+  if (currentLevel < images.length) {
+    currentLevel++;
+    startLevel(currentLevel);
+  } else {
+    canvas.style.display = "block";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.filter = "none";
 
-  // Dibuja timer y nivel
-  drawText(`Nivel ${currentLevel}/${maxLevels}`, 100, 50, 24, "#ffcc00", "left");
-  drawText(`⏱️ ${timer}s`, canvas.width - 100, 50, 24, "#ffcc00", "right");
+    let dotCount = 0;
+    const maxDots = 3;
 
-  if (!imageLoaded) return;
+    const interval = setInterval(() => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // limpiar canvas
 
-  // Dibuja piezas
-  for (let piece of pieces) {
-    ctx.save();
-    ctx.translate(piece.x + piece.w / 2, piece.y + piece.h / 2);
-    ctx.rotate(piece.rotation * Math.PI / 180);
-    ctx.drawImage(
-      image,
-      piece.sx, piece.sy, piece.sw, piece.sh,
-      -piece.w / 2, -piece.h / 2, piece.w, piece.h
-    );
-    ctx.restore();
+      // Fondo semitransparente
+      ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // borde tenue
-    ctx.strokeStyle = "rgba(255,255,255,0.3)";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(piece.x, piece.y, piece.w, piece.h);
+      // Texto centrado
+      ctx.fillStyle = "#E0AAFF";
+      ctx.font = "bold 36px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.shadowColor = "rgba(0,0,0,0.7)";
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      ctx.shadowBlur = 4;
+
+      // Texto con puntos animados
+      let dots = ".".repeat(dotCount);
+      ctx.fillText(`Cargando nuevamente el juego${dots}`, canvas.width / 2, canvas.height / 2);
+
+      dotCount = (dotCount + 1) % (maxDots + 1); // incrementa hasta maxDots y vuelve a 0
+    }, 500); // cada 0.5 segundos cambia
+
+    // Después de 3 segundos, volver al menú
+    setTimeout(() => {
+      clearInterval(interval); // detener animación
+      canvas.style.display = "none";
+      menuScreen.style.display = "block";
+      currentLevel = 1;
+      gameState = "menu";
+    }, 6000);
   }
-}
+});
 
-function drawWinScreen() {
-  clearCanvas();
-  drawText("🎉 ¡Nivel completado!", canvas.width / 2, 250, 50, "#00ff88");
-  drawText(`Tiempo: ${timer}s`, canvas.width / 2, 320, 30, "#fff");
-  drawText("Haz clic para continuar", canvas.width / 2, 400, 24, "#aaa");
-}
 
-// ===================================================
-// 🧩 FUNCIONES DE JUEGO
-// ===================================================
+
+backToMenuBtn.addEventListener("click", () => {
+  winScreen.style.display = "none";
+  canvas.style.display = "none";
+  menuScreen.style.display = "block";
+  currentLevel = 1;
+  gameState = "menu";
+});
+
+// ---------------------------------------------------
+// 🖼️ CONFIGURAR Y CARGAR NIVEL
+// ---------------------------------------------------
 function startLevel(level) {
   gameState = "playing";
-  timer = 0;
-  imageLoaded = false; // reinicia bandera
-
-  // Selecciona imagen aleatoria
-  const imgs = [
-    "images/simpsons1.jpg",
-    "images/simpsons2.jpg",
-    "images/simpsons3.jpg",
-    "images/simpsons4.jpg",
-    "images/simpsons5.jpg"
-  ];
-  const randomSrc = imgs[Math.floor(Math.random() * imgs.length)];
-
-  // Crea nueva instancia para evitar caché/reutilización
-  image = new Image();
-  image.src = randomSrc;
+  canvas.style.display = "block";
+  image.src = images[level - 1];
 
   image.onload = () => {
-    imageLoaded = true;
     setupPieces();
-    startTimer();
-    // no es necesario llamar a render(), ya que ya corre en loop
+    draw();
   };
 }
 
-
+// ---------------------------------------------------
+// 🧠 CREAR PIEZAS DEL ROMPECABEZAS
+// ---------------------------------------------------
 function setupPieces() {
   pieces = [];
-  const rows = 2, cols = 2;
+  const rows = 2; // siempre 2 filas
+  const cols = 2; // siempre 2 columnas
   const pieceW = canvas.width / cols;
   const pieceH = canvas.height / rows;
 
+  // Filtros disponibles
+  const filters = ["grayscale", "brightness", "blur", "darken"];
+
+  // FILTRO GLOBAL POR NIVEL: cada 2 niveles a partir del 2 aplica un filtro diferente
+  if (currentLevel >= 2) {
+    const filterIndex = Math.floor(currentLevel - 2)  % filters.length;
+    currentFilter = filters[filterIndex];
+  } else {
+    currentFilter = null;
+  }
+
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      pieces.push({
+      const piece = {
         x: j * pieceW,
         y: i * pieceH,
         w: pieceW,
@@ -125,52 +144,80 @@ function setupPieces() {
         sy: i * (image.height / rows),
         sw: image.width / cols,
         sh: image.height / rows,
-        rotation: [0, 90, 180, 270][Math.floor(Math.random() * 4)]
-      });
+        rotation: [0, 90, 180, 270][Math.floor(Math.random() * 4)],
+        filter: currentFilter
+      };
+      pieces.push(piece);
     }
   }
 }
 
-function startTimer() {
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timer++;
-  }, 1000);
+// ---------------------------------------------------
+// 🌀 APLICAR FILTROS VISUALES
+// ---------------------------------------------------
+function applyFilter(ctx, filterName) {
+  switch (filterName) {
+    case "grayscale":
+      ctx.filter = "grayscale(100%)";
+      break;
+    case "brightness":
+      ctx.filter = "brightness(20%)";
+      break;
+    case "blur":
+      ctx.filter = "blur(5px)";
+      break;
+    case "darken":
+      ctx.filter = "opacity(20%)";
+      break;
+    default:
+      ctx.filter = "none";
+  }
 }
 
-function stopTimer() {
-  clearInterval(timerInterval);
+// ---------------------------------------------------
+// 🎨 DIBUJAR PIEZAS EN EL CANVAS
+// ---------------------------------------------------
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (const piece of pieces) {
+    ctx.save();
+    ctx.translate(piece.x + piece.w / 2, piece.y + piece.h / 2);
+    ctx.rotate((piece.rotation * Math.PI) / 180);
+    ctx.translate(-piece.w / 2, -piece.h / 2);
+
+    applyFilter(ctx, piece.filter);
+    ctx.drawImage(image, piece.sx, piece.sy, piece.sw, piece.sh, 0, 0, piece.w, piece.h);
+    ctx.restore();
+  }
+
+  ctx.filter = "none";
+
+  if (gameState === "playing") requestAnimationFrame(draw);
 }
 
-function checkWin() {
-  return pieces.every(p => p.rotation % 360 === 0);
-}
-
-// ===================================================
-// 🖱️ EVENTOS
-// ===================================================
+// ---------------------------------------------------
+// 🖱️ CONTROL DE ROTACIÓN DE PIEZAS
+// ---------------------------------------------------
 canvas.addEventListener("click", (e) => {
-  if (gameState === "menu") {
-    startLevel(currentLevel);
-  } else if (gameState === "playing") {
-    const { offsetX, offsetY } = e;
-    for (let piece of pieces) {
-      if (
-        offsetX > piece.x && offsetX < piece.x + piece.w &&
-        offsetY > piece.y && offsetY < piece.y + piece.h
-      ) {
-        piece.rotation -= 90;
-        if (checkWin()) {
-          stopTimer();
-          gameState = "win";
-        }
-        break;
-      }
+  if (gameState !== "playing") return;
+
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  for (const piece of pieces) {
+    if (
+      mx >= piece.x &&
+      mx < piece.x + piece.w &&
+      my >= piece.y &&
+      my < piece.y + piece.h
+    ) {
+      piece.rotation = (piece.rotation + 90) % 360;
+      draw();
+      checkWin();
+      break;
     }
-  } else if (gameState === "win") {
-    currentLevel++;
-    if (currentLevel > maxLevels) currentLevel = 1;
-    startLevel(currentLevel);
   }
 });
 
@@ -178,31 +225,41 @@ canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   if (gameState !== "playing") return;
 
-  const { offsetX, offsetY } = e;
-  for (let piece of pieces) {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  for (const piece of pieces) {
     if (
-      offsetX > piece.x && offsetX < piece.x + piece.w &&
-      offsetY > piece.y && offsetY < piece.y + piece.h
+      mx >= piece.x &&
+      mx < piece.x + piece.w &&
+      my >= piece.y &&
+      my < piece.y + piece.h
     ) {
-      piece.rotation += 90;
-      if (checkWin()) {
-        stopTimer();
-        gameState = "win";
-      }
+      piece.rotation = (piece.rotation + 270) % 360;
+      draw();
+      checkWin();
       break;
     }
   }
 });
 
-// ===================================================
-// 🔁 LOOP PRINCIPAL
-// ===================================================
-function render() {
-  if (gameState === "menu") drawMenu();
-  else if (gameState === "playing") drawGame();
-  else if (gameState === "win") drawWinScreen();
-
-  requestAnimationFrame(render);
+// ---------------------------------------------------
+// 🏆 VERIFICAR SI GANÓ
+// ---------------------------------------------------
+function checkWin() {
+  const allCorrect = pieces.every(p => p.rotation === 0);
+  if (allCorrect) {
+    gameState = "win";
+    showWinScreen();
+  }
 }
 
-render();
+// ---------------------------------------------------
+// 🎉 MOSTRAR PANTALLA DE VICTORIA
+// ---------------------------------------------------
+function showWinScreen() {
+  winLevel.textContent = currentLevel;
+  winScreen.style.display = "block";
+  canvas.style.display = "none";
+}
