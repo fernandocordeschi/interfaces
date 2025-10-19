@@ -1,52 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLOCKA - Juego de Rompecabezas</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLOCKA - Juego con Canvas</title>
 </head>
-<body>
-    <div class="container">
-    <header class="header">
-      <h1>🎮 BLOCKA</h1>
-      <p>Rompecabezas de Imágenes Rotadas</p>
-    </header>
-
-    <main class="game-container">
-      <!-- MENU PRINCIPAL -->
-      <div class="menu-screen active" id="menuScreen">
-        <div class="instructions">
-          <h3>📖 Instrucciones</h3>
-          <ul>
-            <li><strong>Objetivo:</strong> Rotar todas las piezas hasta formar la imagen completa</li>
-            <li><strong>Click Izquierdo:</strong> Gira a la izquierda (90°)</li>
-            <li><strong>Click Derecho:</strong> Gira a la derecha (90°)</li>
-            <li><strong>Filtros:</strong> Las imágenes se aclaran a medida que avanzás de nivel</li>
-          </ul>
-        </div>
-
-        <div class="menu-buttons">
-          <button class="btn btn-primary" id="startBtn">🎯 Comenzar Juego</button>
-        </div>
-      </div>
-
-      <!-- CANVAS DEL JUEGO -->
-      <canvas id="gameCanvas" width="800" height="800"></canvas>
-
-      <!-- PANTALLA DE VICTORIA -->
-      <div class="win-screen" id="winScreen">
-        <div class="win-message">
-          <h2>🎉 ¡Felicitaciones!</h2>
-          <p>Completaste el nivel <span id="winLevel"></span></p>
-          <div class="win-buttons">
-            <button class="btn btn-secondary" id="backToMenuBtn">🏠 Menú Principal</button>
-            <button class="btn btn-success" id="nextLevelBtn">➡️ Siguiente Nivel</button>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <script src="js/scripts.js"></script>z
+<body style="margin:0; overflow:hidden; background:#111;">
+  <canvas id="gameCanvas" width="800" height="800"></canvas>
+  <script src="js/scripts.js"></script>
 </body>
 </html>
