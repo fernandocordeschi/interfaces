@@ -1542,6 +1542,12 @@ body {
         margin-right: 8px;
     }
 
+    .comentario-user-row{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
     .input-comentario-row {
         width: 100%;
         margin: 32px auto 0 auto;
