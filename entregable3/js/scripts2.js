@@ -177,13 +177,13 @@ class Button {
 
             createLevelSelectButtons() {
                 this.buttons = [
-                    new Button(400, 150, 120, 50, 'Fácil', () => this.setGridSize(2), 
+                    new Button(400, 150, 150, 50, 'Fácil (4 P)', () => this.setGridSize(2), 
                         {fillColor: this.gridSize === 2 ? '#667eea' : '#f0f0f0', 
                          textColor: this.gridSize === 2 ? '#fff' : '#333'}),
-                    new Button(540, 150, 120, 50, 'Medio', () => this.setGridSize(3),
+                    new Button(540, 150, 150, 50, 'Medio (9 P)', () => this.setGridSize(3),
                         {fillColor: this.gridSize === 3 ? '#667eea' : '#f0f0f0',
                          textColor: this.gridSize === 3 ? '#fff' : '#333'}),
-                    new Button(680, 150, 120, 50, 'Difícil', () => this.setGridSize(4),
+                    new Button(680, 150, 150, 50, 'Difícil (16 P)', () => this.setGridSize(4),
                         {fillColor: this.gridSize === 4 ? '#667eea' : '#f0f0f0',
                          textColor: this.gridSize === 4 ? '#fff' : '#333'}),
                     
