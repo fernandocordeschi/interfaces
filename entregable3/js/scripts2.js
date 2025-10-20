@@ -97,17 +97,39 @@ class Button {
                 this.canvasWidth = 1200;
                 this.canvasHeight = 600;
                 
-                this.filters = {
-                    1: (ctx) => { ctx.filter = 'grayscale(100%)'; },
-                    2: (ctx) => { ctx.filter = 'brightness(30%)'; },
-                    3: (ctx) => { ctx.filter = 'invert(100%)'; }
-                };
                 
                 this.setupEventListeners();
                 this.createMenuButtons();
                 this.render();
             }
 
+            applyFilter(imageData) {
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        if (this.currentLevel === 1) { 
+            // Escala de grises
+            const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+            data[i] = data[i + 1] = data[i + 2] = gray;
+        } 
+        else if (this.currentLevel === 2) {
+            // Oscuro
+            data[i] = r * 0.3;
+            data[i + 1] = g * 0.3;
+            data[i + 2] = b * 0.3;
+        } 
+        else if (this.currentLevel === 3) {
+            // Invertido
+            data[i] = 255 - r;
+            data[i + 1] = 255 - g;
+            data[i + 2] = 255 - b;
+        }
+    }
+    return imageData;
+}
             setupEventListeners() {
                 this.canvas.addEventListener('click', (e) => this.handleClick(e, 'left'));
                 this.canvas.addEventListener('contextmenu', (e) => {
@@ -385,7 +407,7 @@ class Button {
                 this.ctx.fillStyle = '#667eea';
                 this.ctx.font = 'bold 48px "Segoe UI"';
                 this.ctx.textAlign = 'center';
-                this.ctx.fillText('🎮 BLOCKA', 600, 100);
+                this.ctx.fillText('BLOCKA', 600, 100);
                 
                 this.ctx.font = '24px "Segoe UI"';
                 this.ctx.fillStyle = '#666';
@@ -462,18 +484,33 @@ class Button {
                     this.ctx.translate(centerX, centerY);
                     this.ctx.rotate((piece.rotation * Math.PI) / 180);
                     
-                    if (!this.checkVictory() && this.filters[this.currentLevel]) {
-                        this.filters[this.currentLevel](this.ctx);
-                    }
+                    // if (!this.checkVictory() && this.filters[this.currentLevel]) {
+                    //     this.filters[this.currentLevel](this.ctx);
+                    // }
                     
-                    this.ctx.drawImage(
-                        this.currentImage,
-                        piece.sourceX, piece.sourceY,
-                        piece.size * (this.currentImage.width / this.gameAreaSize),
-                        piece.size * (this.currentImage.height / this.gameAreaSize),
-                        -piece.size / 2, -piece.size / 2,
-                        piece.size, piece.size
-                    );
+                    // Crear un canvas temporal para la pieza
+const tempCanvas = document.createElement('canvas');
+const tempCtx = tempCanvas.getContext('2d');
+tempCanvas.width = piece.size;
+tempCanvas.height = piece.size;
+
+// Dibujar la porción original
+tempCtx.drawImage(
+    this.currentImage,
+    piece.sourceX, piece.sourceY,
+    piece.size * (this.currentImage.width / this.gameAreaSize),
+    piece.size * (this.currentImage.height / this.gameAreaSize),
+    0, 0,
+    piece.size, piece.size
+);
+
+// Aplicar filtro
+let imageData = tempCtx.getImageData(0, 0, piece.size, piece.size);
+imageData = this.applyFilter(imageData);
+tempCtx.putImageData(imageData, 0, 0);
+
+// Dibujar la pieza filtrada rotada
+this.ctx.drawImage(tempCanvas, -piece.size / 2, -piece.size / 2, piece.size, piece.size);
                     
                     this.ctx.restore();
                     
