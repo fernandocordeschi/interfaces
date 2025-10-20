@@ -91,7 +91,8 @@ function startLevel(level) {
     "images/simpsons2.jpg",
     "images/simpsons3.jpg",
     "images/simpsons4.jpg",
-    "images/simpsons5.jpg"
+    "images/simpsons5.jpg",
+    "images/simpsons6.jpg"
   ];
   const randomSrc = imgs[Math.floor(Math.random() * imgs.length)];
 
