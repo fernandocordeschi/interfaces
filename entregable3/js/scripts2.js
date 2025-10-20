@@ -88,20 +88,102 @@ class Button {
                 this.pieces = [];
                 this.currentImage = null;
                 this.timer = 0;
+                this.maxTimePerLevel = {
+    1: 20,  // Nivel 1: 1 minuto
+    2: 40,  // Nivel 2: 1 minuto 30 segundos
+    3: 80  // Nivel 3: 2 minutos
+};
+this.maxTimePerDifficulty = {
+    2: 10,  // Fácil (4 piezas) → 1 minuto
+    3: 30,  // Medio (9 piezas) → 1:30
+    4: 50  // Difícil (16 piezas) → 2 minutos
+};
                 this.moves = 0;
                 this.helpUsed = false;
                 this.timerInterval = null;
+                this.previewImage = null;  // Imagen completa para vista previa
                 this.buttons = [];
+                
                 this.gameAreaY = 0;
                 this.gameAreaSize = 600;
                 this.canvasWidth = 1200;
                 this.canvasHeight = 600;
+                this.previewThumbnails = [];        // Array de mini imágenes
+this.selectedImageIndex = null;     // Índice de la imagen seleccionada
+this.previewAnimationFrame = 0;     // Contador de frames para animación
+this.previewAnimationDone = false;  // Si la animación terminó
                 
                 
                 this.setupEventListeners();
                 this.createMenuButtons();
                 this.render();
             }
+          renderPreview() {
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (!this.previewAnimationDone) {
+        // Mostrar thumbnails en fila
+        const startX = 50;
+        const startY = 100;
+        const spacing = 120;
+        const thumbSize = 100;
+
+        this.previewThumbnails.forEach((thumb, i) => {
+            this.ctx.globalAlpha = 0.5;
+            this.ctx.drawImage(thumb, startX + i * spacing, startY, thumbSize, thumbSize);
+        });
+
+        // Animación continua del borde rojo
+        const animSpeed = 10; // frames por miniatura
+        const index = Math.floor(this.previewAnimationFrame / animSpeed) % this.previewThumbnails.length;
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.strokeStyle = '#ff0000';
+        this.ctx.lineWidth = 4;
+        const thumbX = startX + index * spacing;
+        const thumbY = startY;
+        this.ctx.strokeRect(thumbX, thumbY, thumbSize, thumbSize);
+
+        this.previewAnimationFrame++;
+        requestAnimationFrame(() => this.render());
+    } else {
+        // Mostrar solo la imagen final centrada
+        const canvasCenterX = this.canvas.width / 2;
+        const canvasCenterY = this.canvas.height / 2;
+        const maxWidth = 600;  // tamaño máximo para no salirse del canvas
+        const maxHeight = 600;
+
+        const img = this.previewThumbnails[this.selectedImageIndex];
+        const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+        const imgWidth = img.width * scale;
+        const imgHeight = img.height * scale;
+
+        const x = canvasCenterX - imgWidth / 2;
+        const y = canvasCenterY - imgHeight / 2;
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.drawImage(img, x, y, imgWidth, imgHeight);
+
+        // Texto encima
+        this.ctx.fillStyle = '#ff0000';
+        this.ctx.font = '24px "Segoe UI"';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('IMAGEN A RESOLVER', canvasCenterX, y - 20);
+    }
+
+    // Dibujar botones
+    this.buttons.forEach(btn => btn.draw(this.ctx));
+}
+
+async loadThumbnail(src, size) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.src = src;
+    });
+}
 
             applyFilter(imageData) {
     const data = imageData.data;
@@ -189,6 +271,7 @@ class Button {
                 });
             }
 
+
             createMenuButtons() {
                 this.buttons = [
                     new Button(450, 200, 300, 60, 'Jugar', () => this.showLevelSelect()),
@@ -196,6 +279,12 @@ class Button {
                     new Button(450, 360, 300, 60, 'Galería', () => this.showGallery())
                 ];
             }
+
+            createPreviewButtons() {
+    this.buttons = [
+        new Button(500, 520, 200, 50, 'Comenzar', () => this.beginGame())
+    ];
+}
 
             createLevelSelectButtons() {
                 this.buttons = [
@@ -235,6 +324,13 @@ class Button {
                 ];
             }
 
+            createDefeatButtons() {
+    this.buttons = [
+        new Button(900, 520, 180, 50, 'Menú', () => this.showMenu(), 
+            {fillColor: '#ff5252', textColor: '#333'})
+    ];
+}   
+
             setGridSize(size) {
                 this.gridSize = size;
                 this.createLevelSelectButtons();
@@ -271,21 +367,47 @@ class Button {
                 ];
                 this.render();
             }
+            
 
             async startLevel(level) {
-                this.currentLevel = level;
-                this.moves = 0;
-                this.timer = 0;
-                this.helpUsed = false;
-                
-                const randomIndex = Math.floor(Math.random() * this.images.length);
-                await this.loadImage(this.images[randomIndex]);
-                
-                this.currentScreen = 'game';
-                this.createGameButtons();
-                this.startTimer();
-                this.render();
-            }
+    this.currentLevel = level;
+    this.moves = 0;
+    this.timer = 0;
+    this.helpUsed = false;
+
+    // Selección random de imagen
+    const randomIndex = Math.floor(Math.random() * this.images.length);
+    await this.loadImage(this.images[randomIndex]);
+
+    // Guardamos la imagen en preview
+    this.previewImage = this.currentImage;
+    this.selectedImageIndex = randomIndex;
+
+    // Crear thumbnails
+    this.previewThumbnails = await Promise.all(this.images.map(src => this.loadThumbnail(src, 100)));
+
+    // Cambiamos pantalla y reiniciamos animación
+    this.currentScreen = 'preview';
+    this.previewAnimationFrame = 0;
+    this.previewAnimationDone = false;
+    this.createPreviewButtons();
+    this.render();
+
+    // Elegir imagen final después de tiempo aleatorio
+    const randomTime = 1000 + Math.random() * 4000; // 1000 a 5000 ms
+    setTimeout(() => {
+        this.previewAnimationDone = true;
+        this.render();
+    }, randomTime);
+}
+beginGame() {
+    this.currentScreen = 'game';
+    this.currentImage = this.previewImage;
+    this.createPieces();
+    this.createGameButtons();
+    this.startTimer();
+    this.render();
+}
 
             async loadImage(src) {
                 return new Promise((resolve) => {
@@ -348,11 +470,21 @@ class Button {
             }
 
             startTimer() {
-                this.timerInterval = setInterval(() => {
-                    this.timer++;
-                    this.render();
-                }, 1000);
-            }
+    const maxTime = this.maxTimePerDifficulty[this.gridSize] || 120;
+    this.timerInterval = setInterval(() => {
+        this.timer++;
+
+        if (this.timer >= maxTime) {
+            this.stopTimer();
+            this.currentScreen = 'defeat';
+            this.createDefeatButtons();
+            this.render();
+            return;
+        }
+
+        this.render();
+    }, 1000);
+}
 
             stopTimer() {
                 if (this.timerInterval) {
@@ -389,11 +521,17 @@ class Button {
                     case 'levelSelect':
                         this.renderLevelSelect();
                         break;
+                    case 'preview':        
+                        this.renderPreview();
+                        break;
                     case 'game':
                         this.renderGame();
                         break;
                     case 'victory':
                         this.renderVictory();
+                        break;
+                    case 'defeat':          
+                        this.renderDefeat();
                         break;
                     case 'gallery':
                         this.renderGallery();
@@ -465,7 +603,8 @@ class Button {
                 this.ctx.font = 'bold 24px "Segoe UI"';
                 this.ctx.textAlign = 'left';
                 this.ctx.fillText(`Nivel ${this.currentLevel}`, infoX, infoStartY);
-                this.ctx.fillText(`⏱ Tiempo: ${this.formatTime(this.timer)}`, infoX, infoStartY + 50);
+                const maxTime = this.maxTimePerDifficulty[this.gridSize] || 120;
+this.ctx.fillText(`⏱ Tiempo: ${this.formatTime(this.timer)} / ${this.formatTime(maxTime)}`, infoX, infoStartY + 50);
                 this.ctx.fillText(`🔄 Movimientos: ${this.moves}`, infoX, infoStartY + 100);
                 
                 // Área del juego a la izquierda
@@ -542,6 +681,25 @@ this.ctx.drawImage(tempCanvas, -piece.size / 2, -piece.size / 2, piece.size, pie
                     this.ctx.fillText('Ayuda usada: Sí (+5 segundos)', 900, 300);
                 }
             }
+            renderDefeat() {
+    this.ctx.fillStyle = '#ff5252';
+    this.ctx.font = 'bold 40px "Segoe UI"';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('¡Tiempo Agotado! ⏰', 900, 80);
+
+    const size = 550;
+    const x = 25;
+    const y = 25;
+
+    // Mostrar la imagen para que el jugador vea qué iba a resolver
+    this.ctx.drawImage(this.currentImage, x, y, size, size);
+
+    this.ctx.fillStyle = '#333';
+    this.ctx.font = '24px "Segoe UI"';
+    this.ctx.fillText(`Movimientos: ${this.moves}`, 900, 200);
+
+    this.buttons.forEach(btn => btn.draw(this.ctx));
+}
 
             renderGallery() {
                 this.ctx.fillStyle = '#333';
