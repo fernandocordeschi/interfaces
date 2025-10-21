@@ -317,6 +317,10 @@ function manejarLogin({
   // Qué hace: previene el envio por defecto y redirige si el botón está habilitado
   btn.addEventListener("click", function(e) {
     e.preventDefault();
+    if (!form.checkValidity()) {
+    alert("Por favor completa el mail correctamente.") // bloquea el envío si no pasa la validación HTML
+    return;
+  }
     if (btn.disabled) return;
     window.location.href = redireccion;
   });
@@ -373,6 +377,10 @@ function manejarRegistro({
   btn.addEventListener("click", function(e) {
   e.preventDefault();
   if (btn.disabled) return;
+  if (!form.checkValidity()) {
+    alert("Por favor completa el mail correctamente.") // bloquea el envío si no pasa la validación HTML
+    return;
+  }
 
   const overlay = form.querySelector(".like-overlay");
   if (overlay) {
