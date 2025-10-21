@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Good Games</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles2.css">
 </head>
 
 <body>
@@ -85,263 +85,277 @@
     </header>
 
     <main class="juego-container">
-    <h1 class="tituloJuego"> Blocka: Simpsons Version </h1>
+        <h1 class="tituloJuego">Blocka: Simpsons Version</h1>
 
-    <p class="textoJuego"><a href="home.html" class="breadcrums">Inicio</a> <img src="images/arrow-icon.png" alt=""
-            class="arrowJuego"> Blocka: Simpsons Version </p>
-    <canvas id="gameCanvas" width="800" height="800"></canvas>
-    <div class="btn-feedback">
-        <img src="images/like-icon.png" alt="">
-        <img src="images/fav-icon.png" alt="">
-        <img src="images/share-icon.png" alt="">
-        <img src="images/report-icon.png" alt="">
-    </div>
-    <p class="textoAyuda">Ayuda / Instrucciones</p>
-    <div class="contenedor-ayuda">
-        <h2 class="subtituloAyuda">¿Cómo jugar a Blocka: Simpsons Version?</h2>
-        <p>En esta versión especial del clásico Peg Solitaire, el tablero de madera se transforma en el sillón de la
-            familia Simpson. Los peones ya no son simples fichas: ahora son Homer y Bart, luchando por quedarse como el
-            único dueño del sillón.
-
-        <p>📜 Reglas del juego</p>
-        <p>1. </p>
-        <p></p>
-        <p>2. Movimientos</p>
-        <p></p>
-        <p>3. Objetivo</p>
-        <p>Rota todas las piezas de la imagen hasta que estén en su posición correcta.</p>
-    </div>
-
-    <p class="textoAyuda">Muestras del Juego</p>
-    <div class="contenedor-muestra">
-
-        <div class="card-muestra">
-            <a href=""><img src="images/card-muestra.png" alt="Imagen del juego"></a>
-            <div class="texto">Imagen del juego</div>
+        <p class="textoJuego"><a href="home.html" class="breadcrums">Inicio</a> <img src="images/arrow-icon.png" alt=""
+                class="arrowJuego"> Blocka: Simpsons Version</p>
+        <canvas id="gameCanvas" width="1200" height="600"></canvas>
+        <div class="btn-feedback">
+            <img src="images/like-icon.png" alt="">
+            <img src="images/fav-icon.png" alt="">
+            <img src="images/share-icon.png" alt="">
+            <img src="images/report-icon.png" alt="">
         </div>
-        <div class="card-muestra">
-            <a href=""><img src="images/card-trailer.png" alt="Imagen del juego"></a>
-            <div class="texto">Trailer del juego</div>
-        </div>
-        <div class="card-muestra">
-            <a href=""><img src="images/card-muestra.png" alt="Imagen del juego"></a>
-            <div class="texto">Imagen del juego</div>
+        <p class="textoAyuda">Ayuda / Instrucciones</p>
+        <div class="contenedor-ayuda">
+            <h2 class="subtituloAyuda">¿Cómo jugar a Blocka: Simpsons Version</h2>
+            <p>Blocka es un juego de rompecabezas visual basado en imágenes rotadas. Cada nivel presenta una “blocka”,
+                que es
+                una imagen dividida en subimágenes. Estas partes están giradas respecto a su posición correcta y el
+                objetivo del
+                jugador es restaurar la imagen final rotando cada pieza hasta que encaje visualmente.
+            <p>📜 Reglas del juego</p>
+            <p>Al comenzar un nivel, se muestra la imagen desarmada con una interfaz limpia. Cada subimagen puede
+                rotarse
+                haciendo clic:
+                <li>
+                    <ul>Botón izquierdo: gira hacia la izquierda.</ul>
+                    <ul>Botón derecho: gira hacia la derecha.</ul>
+                </li>
+            <p>El jugador debe rotar cada una hasta que las cuatro formen correctamente la imagen original. </p>
+            <p></p>
+            <p>⏱️ Temporizador y progreso</p>
+            <p>El temporizador se activa cuando el jugador selecciona “Comenzar”. Una vez que la imagen es armada
+                correctamente, el tiempo se detiene y se registra como récord del nivel.
+                Al finalizar, el jugador puede: Volver al Menú Principal, o Avanzar al siguiente nivel.</p>
+            <p>🔄 Dificultad creciente</p>
+            <p>Cada nuevo nivel conserva la misma mecánica pero cambia la imagen y suma desafíos:
+                La imagen aparece más desordenada.
+                Se aplican filtros visuales que dificultan el reconocimiento.
+                En niveles avanzados, cada subimagen puede tener un filtro distinto.
+                Al completar el rompecabezas, los filtros desaparecen y se revela la imagen original en RGB.</p>
         </div>
 
-    </div>
+        <p class="textoAyuda">Muestras del Juego</p>
+        <div class="contenedor-muestra">
 
-    <div class="game-links">
-        <a class="game-link" href="https://en.wikipedia.org/wiki/Peg_solitaire" target="_blank"
-            rel="noopener noreferrer">Historia del juego</a>
-        <p>|</p>
-        <a class="game-link" href="" target="_blank" rel="noopener noreferrer">Web del desarrollador</a>
-    </div>
+            <div class="card-muestra">
+                <a href=""><img src="images/cap1-blocka.png" alt="Imagen del juego"></a>
+                <div class="texto">Imagen del juego</div>
+            </div>
+            <div class="card-muestra">
+                <a href=""><img src="images/cap2-blocka.png" alt="Imagen del juego"></a>
+                <div class="texto">Imagen del juego</div>
+            </div>
+            <div class="card-muestra">
+                <a href=""><img src="images/cap3-blocka.png" alt="Imagen del juego"></a>
+                <div class="texto">Imagen del juego</div>
+            </div>
 
-    <p class="textoAyuda">Comentarios</p>
-    <div class="contenedor-comentador">
-        <div class="comentario-user-row">
-            <img src="images/user.png" alt="" class="imagenUsuario-comentar">
-            <span class="nombreUsuario">Lionel Messi</span>
         </div>
-        <div class="input-comentario-row">
-            <span class="icono-comentario"><img src="images/coment-icon.png" alt=""></span>
-            <input type="text" placeholder="¿Qué opinas de este juego?" class="input-comentario">
+
+        <div class="game-links">
+            <a class="game-link" href="https://es.wikipedia.org/wiki/Rompecabezas" target="_blank"
+                rel="noopener noreferrer">Historia del juego</a>
+            <p>|</p>
+            <a class="game-link" href="" target="_blank" rel="noopener noreferrer">Web del desarrollador</a>
         </div>
-    </div>
-    <div class="contenedor-comentarios">
-        <div class="comentarios-switch">
-            <span id="destacados-tab" class="tab-comentario active">Comentarios destacados</span> |
-            <span id="recientes-tab" class="tab-comentario">Comentarios recientes</span>
+
+        <p class="textoAyuda">Comentarios</p>
+        <div class="contenedor-comentador">
+            <div class="comentario-user-row">
+                <img src="images/user.png" alt="" class="imagenUsuario">
+                <span class="nombreUsuario">Lionel Messi</span>
+            </div>
+            <div class="input-comentario-row">
+                <span class="icono-comentario"><img src="images/coment-icon.png" alt=""></span>
+                <input type="text" placeholder="¿Qué opinas de este juego?" class="input-comentario">
+            </div>
         </div>
-        <div id="comentarios-destacados" class="comentarios-lista">
-            <div class="comentario">
-                <img src="images/user1.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Juan Oliverchi</span>
-                        <span class="fechaComentario">Hace 7d</span>
+        <div class="contenedor-comentarios">
+            <div class="comentarios-switch">
+                <span id="destacados-tab" class="tab-comentario active">Comentarios destacados</span> |
+                <span id="recientes-tab" class="tab-comentario">Comentarios recientes</span>
+            </div>
+            <div id="comentarios-destacados" class="comentarios-lista">
+                <div class="comentario">
+                    <img src="images/user1.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Juan Oliverchi</span>
+                            <span class="fechaComentario">Hace 7d</span>
+                        </div>
+                        <p>Muy difícil, aunque entretenido.</p>
                     </div>
-                    <p>Muy difícil, aunque entretenido.</p>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">31</span>
+                        <button class="btn-like">👍</button>
+                    </div>
                 </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">31</span>
-                    <button class="btn-like">👍</button>
+                <div class="comentario">
+                    <img src="images/user2.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Maite Lina</span>
+                            <span class="fechaComentario">Hace 1d</span>
+                        </div>
+                        <p>Aburridooo.</p>
+                    </div>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">22</span>
+                        <button class="btn-like">👍</button>
+                    </div>
+                </div>
+                <div class="comentario">
+                    <img src="images/user3.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Tomi Gamer</span>
+                            <span class="fechaComentario">Hace 14d</span>
+                        </div>
+                        <p>Me encanta jugarlo aunque nunca lo pueda ganar.</p>
+                    </div>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">10</span>
+                        <button class="btn-like">👍</button>
+                    </div>
+                </div>
+                <div class="comentario">
+                    <img src="images/user4.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Niki flow</span>
+                            <span class="fechaComentario">Hace 7d</span>
+                        </div>
+                        <p>Me encanta jugarlo aunque nunca lo pueda ganar.</p>
+                    </div>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">9</span>
+                        <button class="btn-like">👍</button>
+                    </div>
                 </div>
             </div>
-            <div class="comentario">
-                <img src="images/user2.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Maite Lina</span>
-                        <span class="fechaComentario">Hace 1d</span>
+            <div id="comentarios-recientes" class="comentarios-lista" style="display:none;">
+                <div class="comentario">
+                    <img src="images/user5.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Sofi Gamer</span>
+                            <span class="fechaComentario">Hace 2h</span>
+                        </div>
+                        <p>¡Está buenísimo, lo jugué con mi hermano!</p>
                     </div>
-                    <p>Aburridooo.</p>
-                </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">22</span>
-                    <button class="btn-like">👍</button>
-                </div>
-            </div>
-            <div class="comentario">
-                <img src="images/user3.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Tomi Gamer</span>
-                        <span class="fechaComentario">Hace 14d</span>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">5</span>
+                        <button class="btn-like">👍</button>
                     </div>
-                    <p>Me encanta jugarlo aunque nunca lo pueda ganar.</p>
                 </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">10</span>
-                    <button class="btn-like">👍</button>
-                </div>
-            </div>
-            <div class="comentario">
-                <img src="images/user4.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Niki flow</span>
-                        <span class="fechaComentario">Hace 7d</span>
+                <div class="comentario">
+                    <img src="images/user6.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Lucas Pro</span>
+                            <span class="fechaComentario">Hace 5h</span>
+                        </div>
+                        <p>No entendí las reglas al principio pero después me divertí.</p>
                     </div>
-                    <p>Me encanta jugarlo aunque nunca lo pueda ganar.</p>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">3</span>
+                        <button class="btn-like">👍</button>
+                    </div>
                 </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">9</span>
-                    <button class="btn-like">👍</button>
+                <div class="comentario">
+                    <img src="images/user7.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Vale Simp</span>
+                            <span class="fechaComentario">Hace 7h</span>
+                        </div>
+                        <p>Me gustaría que tenga más niveles.</p>
+                    </div>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">2</span>
+                        <button class="btn-like">👍</button>
+                    </div>
+                </div>
+                <div class="comentario">
+                    <img src="images/user8.png" alt="" class="imagenUsuario">
+                    <div class="comentario-info">
+                        <div class="comentario-header">
+                            <span class="nombreUsuario">Mati Dev</span>
+                            <span class="fechaComentario">Hace 12h</span>
+                        </div>
+                        <p>Está bueno pero se traba a veces.</p>
+                    </div>
+                    <div class="likes-comentario">
+                        <span class="cantidad-likes">1</span>
+                        <button class="btn-like">👍</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="comentarios-recientes" class="comentarios-lista" style="display:none;">
-            <div class="comentario">
-                <img src="images/user5.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Sofi Gamer</span>
-                        <span class="fechaComentario">Hace 2h</span>
-                    </div>
-                    <p>¡Está buenísimo, lo jugué con mi hermano!</p>
-                </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">5</span>
-                    <button class="btn-like">👍</button>
-                </div>
-            </div>
-            <div class="comentario">
-                <img src="images/user6.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Lucas Pro</span>
-                        <span class="fechaComentario">Hace 5h</span>
-                    </div>
-                    <p>No entendí las reglas al principio pero después me divertí.</p>
-                </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">3</span>
-                    <button class="btn-like">👍</button>
-                </div>
-            </div>
-            <div class="comentario">
-                <img src="images/user7.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Vale Simp</span>
-                        <span class="fechaComentario">Hace 7h</span>
-                    </div>
-                    <p>Me gustaría que tenga más niveles.</p>
-                </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">2</span>
-                    <button class="btn-like">👍</button>
-                </div>
-            </div>
-            <div class="comentario">
-                <img src="images/user8.png" alt="" class="imagenUsuario">
-                <div class="comentario-info">
-                    <div class="comentario-header">
-                        <span class="nombreUsuario">Mati Dev</span>
-                        <span class="fechaComentario">Hace 12h</span>
-                    </div>
-                    <p>Está bueno pero se traba a veces.</p>
-                </div>
-                <div class="likes-comentario">
-                    <span class="cantidad-likes">1</span>
-                    <button class="btn-like">👍</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-</main>
+    </main>
 
 
 
-<footer>
-    <div class="footer-container">
-        <div class="footer-logo">
-            <a href="#">
-                <img src="images/logo.png" alt="GoodGames Logo" />
-            </a>
-            <div class="footer-social">
-                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><img
-                        src="images/instagram-icon.png" alt="Instagram"></a>
-                <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"><img
-                        src="images/twitter-icon.png" alt="Twitter"></a>
-                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><img
-                        src="images/facebook-icon.png" alt="Facebook"></a>
-                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer"><img
-                        src="images/youtube-icon.png" alt="YouTube"></a>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <a href="#">
+                    <img src="images/logo.png" alt="GoodGames Logo" />
+                </a>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/instagram-icon.png" alt="Instagram"></a>
+                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/twitter-icon.png" alt="Twitter"></a>
+                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/facebook-icon.png" alt="Facebook"></a>
+                    <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/youtube-icon.png" alt="YouTube"></a>
+                </div>
             </div>
+
+            <div class="footer-links">
+
+                <div class="links">
+                    <div class="title-icon">
+                        <img src="images/links-icon.png" class="footer-icon">
+                        <h3>Links</h3>
+                    </div>
+                    <ul>
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="#">Categorías</a></li>
+                        <li><a href="#">Términos y condiciones</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="nosotros">
+                    <div class="title-icon">
+                        <img src="images/icon.png" class="footer-icon">
+                        <h3>Nosotros</h3>
+                    </div>
+                    <ul>
+                        <li><a href="#">Quienes somos</a></li>
+                        <li><a href="#">Preguntas Frecuentes</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+
+                <div class="ayuda">
+                    <div class="title-icon">
+                        <img src="images/ayuda-icon.png" class="footer-icon">
+                        <h3>Ayuda</h3>
+                    </div>
+                    <ul>
+                        <li><a href="#">Guía de juego</a></li>
+                        <li><a href="#">Soporte técnico</a></li>
+                        <li><a href="#">Tutoriales</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
         </div>
 
-        <div class="footer-links">
-
-            <div class="links">
-                <div class="title-icon">
-                    <img src="images/links-icon.png" class="footer-icon">
-                    <h3>Links</h3>
-                </div>
-                <ul>
-                    <li><a href="home.html">Home</a></li>
-                    <li><a href="#">Categorías</a></li>
-                    <li><a href="#">Términos y condiciones</a></li>
-                    <li><a href="#">Privacidad</a></li>
-                </ul>
-            </div>
-
-            <div class="nosotros">
-                <div class="title-icon">
-                    <img src="images/icon.png" class="footer-icon">
-                    <h3>Nosotros</h3>
-                </div>
-                <ul>
-                    <li><a href="#">Quienes somos</a></li>
-                    <li><a href="#">Preguntas Frecuentes</a></li>
-                    <li><a href="#">Contáctanos</a></li>
-                </ul>
-            </div>
-
-            <div class="ayuda">
-                <div class="title-icon">
-                    <img src="images/ayuda-icon.png" class="footer-icon">
-                    <h3>Ayuda</h3>
-                </div>
-                <ul>
-                    <li><a href="#">Guía de juego</a></li>
-                    <li><a href="#">Soporte técnico</a></li>
-                    <li><a href="#">Tutoriales</a></li>
-                </ul>
-            </div>
+        <div class="footer-copy">
+            <p>Copyright © 2025 GAMES Todos los derechos reservados</p>
         </div>
+    </footer>
 
-
-    </div>
-
-    <div class="footer-copy">
-        <p>Copyright © 2025 GAMES Todos los derechos reservados</p>
-    </div>
-</footer>
-
-    <script src="js/scripts.js"></script>
+    <script src="js/scripts2.js"></script>
 </body>
 
 </html>

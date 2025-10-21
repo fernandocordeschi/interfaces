@@ -1,42 +1,40 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar sesión - GoodGames</title>
+  <title>Registrate - GoodGames</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
+
 <body>
   <header class="header">
-    <div class="inicio">
-      <div>
-        <a href="index.html"><img class="imagenLogo" src="images/logo.png" alt="Mi marca"></a>
-      </div>
-    </div>
-  </header>
+        <div class="inicio">
+            <div>
+                <a href="index.html"><img class="imagenLogo" src="images/logo.png" alt="Mi marca"></a>
+            </div>
+        </div>
+    </header>
+
 
   <main>
     <div class="registro">
-      <h2 class="titulo-registro">Inicia Sesión</h2>
-      <p class="subtitulo-registro">Inicia sesión para empezar a jugar</p>
+      <h2 class="titulo-registro">Crear una cuenta</h2>
+      <p class="subtitulo-registro">Registrate para empezar a jugar</p>
 
-      <p class="texto-redes">Ingresa con:</p>
-      <div class="botones-redes">
-        <button type="button" class="btn-small btn-facebook-login">
-          <img src="images/Icono-Facebook.png" alt="Icono-Facebook" class="icono-red-social">
-          Facebook
-        </button>
-        <button type="button" class="btn-small btn-google-login">
-          <img src="images/Icono-google.png" alt="Icono-google" class="icono-red-social">
-          Google
-        </button>
-      </div>
-
-      <div class="linea-separadora"></div>
-
-      <form class="form-registro-login">
+      <form class="form-registro">
+        <label for="nombre">Nombre y Apellido</label>
+        <div class="input-container">
+          <input type="text" id="nombre" name="nombre" class="input-text" required>
+        </div>
+        <label for="apodo">Apodo</label>
+          <input type="text" id="apodo" name="apodo" class="input-text">
+        <label for="edad">Edad</label>
+        <div class="input-container">
+          <input type="number" id="edad" name="edad" class="input-text" required>
+        </div>
         <label for="email">Email</label>
         <div class="input-container">
           <input type="email" id="email" name="email" class="input-text" required>
@@ -45,18 +43,38 @@
         <div class="input-container">
           <input type="password" id="password" name="password" class="input-text" required>
         </div>
+        <label for="password2">Repetir contraseña</label>
+        <div class="input-container">
+          <input type="password" id="password2" name="password2" class="input-text" required>
+        </div>
         <div class="campo-obligatorio">Campo obligatorio</div>
         <div class="captcha-fake">
-          <input type="checkbox" id="captcha-login" name="captcha" required>
-          <label for="captcha-login">No soy un robot</label>
+          <input type="checkbox" id="captcha" name="captcha">
+          <label for="captcha">No soy un robot</label>
           <img src="images/recaptcha.png" alt="reCAPTCHA" class="img-recaptcha">
         </div>
 
-        <button type="submit" class="btn-large btn-login btn-registrar" disabled>Iniciar sesión</button>
+        <button type="submit" class="btn-registrar btn-large btn-verde" disabled>Registrarme
+        </button>
+        <div class="like-overlay">
+          <span class="like">👍</span>
+          <span class="welcome-text">Bienvenido a "GoodGames"</span>
+        </div>
       </form>
 
-      <p class="texto-login">¿No tenés cuenta? <a href="singup.html">Registrate</a></p>
+      <p class="texto-login">¿Ya tenés cuenta? <a href="index.html">Iniciá sesión</a></p>
 
+      <p class="texto-redes">O registrate con:</p>
+      <div class="botones-redes">
+        <button type="button" class="btn-small btn-facebook">
+          <img src="images/Icono-Facebook.png" alt="Icono-Facebook" class="icono-red-social">
+          Facebook
+        </button>
+        <button type="button" class="btn-small btn-google">
+          <img src="images/Icono-google.png" alt="Icono-google" class="icono-red-social">
+          Google
+        </button>
+      </div>
     </div>
   </main>
 
@@ -71,15 +89,15 @@
               src="images/instagram-icon.png" alt="Instagram"></a>
           <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"><img src="images/twitter-icon.png"
               alt="Twitter"></a>
-          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><img
-              src="images/facebook-icon.png" alt="Facebook"></a>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><img src="images/facebook-icon.png"
+              alt="Facebook"></a>
           <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer"><img src="images/youtube-icon.png"
               alt="YouTube"></a>
         </div>
       </div>
-
+  
       <div class="footer-links">
-
+  
         <div class="links">
           <div class="title-icon">
             <img src="images/links-icon.png" class="footer-icon">
@@ -92,7 +110,7 @@
             <li><a href="#">Privacidad</a></li>
           </ul>
         </div>
-
+  
         <div class="nosotros">
           <div class="title-icon">
             <img src="images/icon.png" class="footer-icon">
@@ -104,7 +122,7 @@
             <li><a href="#">Contáctanos</a></li>
           </ul>
         </div>
-
+  
         <div class="ayuda">
           <div class="title-icon">
             <img src="images/ayuda-icon.png" class="footer-icon">
@@ -117,10 +135,10 @@
           </ul>
         </div>
       </div>
-
-
+  
+  
     </div>
-
+  
     <div class="footer-copy">
       <p>Copyright © 2025 GAMES Todos los derechos reservados</p>
     </div>
