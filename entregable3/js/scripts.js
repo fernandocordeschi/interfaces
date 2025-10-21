@@ -318,7 +318,7 @@ function manejarLogin({
   btn.addEventListener("click", function(e) {
     e.preventDefault();
     if (!form.checkValidity()) {
-    alert("Por favor completa el mail correctamente.") // bloquea el envío si no pasa la validación HTML
+    alert("Por favor completa el formulario correctamente.") // bloquea el envío si no pasa la validación HTML
     return;
   }
     if (btn.disabled) return;
@@ -378,7 +378,7 @@ function manejarRegistro({
   e.preventDefault();
   if (btn.disabled) return;
   if (!form.checkValidity()) {
-    alert("Por favor completa el mail correctamente.") // bloquea el envío si no pasa la validación HTML
+    alert("Por favor completa el formulario correctamente.") // bloquea el envío si no pasa la validación HTML
     return;
   }
 
