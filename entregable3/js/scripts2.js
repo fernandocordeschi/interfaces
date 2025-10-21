@@ -125,11 +125,13 @@ class Game {
 
        if (!this.previewAnimationDone) {
         // Mostrar thumbnails en fila centrada
-        const thumbSize = 100;
-        const spacing = 120;
+        const thumbSize = 140;
+        const spacing = 160;
         const totalWidth = this.previewThumbnails.length * thumbSize + (this.previewThumbnails.length - 1) * (spacing - thumbSize);
         const startX = (this.canvas.width - totalWidth) / 2;
-        const startY = 100;
+         const totalHeight = thumbSize;
+        const startY = (this.canvas.height - totalHeight) / 2;
+
 
         this.previewThumbnails.forEach((thumb, i) => {
             const x = startX + i * spacing;
@@ -398,15 +400,17 @@ class Game {
 
         // Cambiamos pantalla y reiniciamos animación
         this.currentScreen = 'preview';
+        this.buttons = [];
         this.previewAnimationFrame = 0;
         this.previewAnimationDone = false;
-        this.createPreviewButtons();
+
         this.render();
 
         // Elegir imagen final después de tiempo aleatorio
         const randomTime = 1000 + Math.random() * 4000; // 1000 a 5000 ms
         setTimeout(() => {
             this.previewAnimationDone = true;
+                    this.createPreviewButtons();
             this.render();
         }, randomTime);
     }
