@@ -1,3 +1,4 @@
+// solo para game.html
 class Button {
     constructor(x, y, width, height, text, onClick, style = {}) {
         this.x = x;
