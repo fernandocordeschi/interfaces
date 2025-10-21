@@ -1521,6 +1521,11 @@ body {
         position: relative;
         /* importante para que el icono absoluto quede relativo a este contenedor */
     }
+        .comentario-user-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
     .input-comentario {
         width: 100%;

@@ -164,11 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Usado en: home.html (redirige a game.html cuando corresponde)
       if (playBtn) {
         playBtn.addEventListener('click', function () {
-          // Verifica si la tarjeta activa tiene alt="Juego 1"
-          const activeCard = carousel.querySelector('.card.active img');
-          if (activeCard && activeCard.getAttribute('alt') === 'Juego 1') {
-            window.location.href = 'game.html';
-          }
+            window.location.href = 'game.html';   
         });
       }
   }

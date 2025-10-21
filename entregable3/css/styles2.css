@@ -2692,5 +2692,9 @@ body {
         /* evita que padding agrande el ancho total */
     }
 
+    ul {
+        padding-left: 1%;
+    }
+
 
 }
