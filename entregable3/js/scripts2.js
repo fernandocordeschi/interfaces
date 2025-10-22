@@ -85,6 +85,7 @@ class Game {
 
     this.currentScreen = 'menu';
     this.currentLevel = 1;
+    this.dificultad = 1
     this.gridSize = 2;
     this.pieces = [];
     this.currentImage = null;
@@ -95,9 +96,9 @@ class Game {
       3: 80  // Nivel 3: 2 minutos
     };
     this.maxTimePerDifficulty = {
-      2: 10,  // Fácil (4 piezas) → 1 minuto
-      3: 30,  // Medio (9 piezas) → 1:30
-      4: 50  // Difícil (16 piezas) → 2 minutos
+      1: 10,  // Fácil (4 piezas) → 1 minuto
+      2: 30,  // Medio (9 piezas) → 1:30
+      3: 50  // Difícil (16 piezas) → 2 minutos
     };
     this.moves = 0;
     this.helpUsed = false;
@@ -249,33 +250,36 @@ class Game {
   }
 
   handleClick(e, direction) {
-    const pos = this.getMousePos(e);
+  const pos = this.getMousePos(e);
 
-    if (this.currentScreen === 'game' && direction !== 'menu') {
-      const offsetX = 25;
-      const offsetY = 0;
-      const piece = this.pieces.find(p =>
-        p.contains(pos.x - offsetX, pos.y - offsetY)
-      );
+  if (this.currentScreen === 'game' && direction !== 'menu') {
+    const offsetX = 25;
+    const boardHeight = this.rows * (this.gameAreaSize / Math.max(this.rows, this.cols));
+    const offsetY = (this.canvas.height - boardHeight) / 2; // 🔹 mismo offsetY del render
 
-      if (piece && !piece.isFixed) {
-        piece.rotate(direction);
-        this.moves++;
-        this.render();
+    // ahora el clic se compara correctamente dentro del tablero
+    const piece = this.pieces.find(p =>
+      p.contains(pos.x - offsetX, pos.y - offsetY)
+    );
 
-        if (this.checkVictory()) {
-          this.handleVictory();
-        }
-        return;
+    if (piece && !piece.isFixed) {
+      piece.rotate(direction);
+      this.moves++;
+      this.render();
+
+      if (this.checkVictory()) {
+        this.handleVictory();
       }
+      return;
     }
-
-    this.buttons.forEach(btn => {
-      if (btn.contains(pos.x, pos.y)) {
-        btn.onClick();
-      }
-    });
   }
+
+  this.buttons.forEach(btn => {
+    if (btn.contains(pos.x, pos.y)) {
+      btn.onClick();
+    }
+  });
+}
 
 
   createMenuButtons() {
@@ -294,20 +298,20 @@ class Game {
 
   createLevelSelectButtons() {
     this.buttons = [
-      new Button(400, 150, 150, 50, 'Fácil (4 P)', () => this.setGridSize(2),
+      new Button(400, 150, 150, 50, 'Fácil (4 P)', () => this.setDificultad(1),
         {
-          fillColor: this.gridSize === 2 ? '#667eea' : '#f0f0f0',
-          textColor: this.gridSize === 2 ? '#fff' : '#333'
+          fillColor: this.dificultad === 1 ? '#667eea' : '#f0f0f0',
+          textColor: this.dificultad === 1 ? '#fff' : '#333'
         }),
-      new Button(540, 150, 150, 50, 'Medio (9 P)', () => this.setGridSize(3),
+      new Button(540, 150, 150, 50, 'Medio (6 P)', () => this.setDificultad(2),
         {
-          fillColor: this.gridSize === 3 ? '#667eea' : '#f0f0f0',
-          textColor: this.gridSize === 3 ? '#fff' : '#333'
+          fillColor: this.dificultad === 2 ? '#667eea' : '#f0f0f0',
+          textColor: this.dificultad === 2 ? '#fff' : '#333'
         }),
-      new Button(680, 150, 150, 50, 'Difícil (16 P)', () => this.setGridSize(4),
+      new Button(680, 150, 150, 50, 'Difícil (8 P)', () => this.setDificultad(3),
         {
-          fillColor: this.gridSize === 4 ? '#667eea' : '#f0f0f0',
-          textColor: this.gridSize === 4 ? '#fff' : '#333'
+          fillColor: this.dificultad === 3 ? '#667eea' : '#f0f0f0',
+          textColor: this.dificultad === 3 ? '#fff' : '#333'
         }),
 
       new Button(350, 250, 180, 100, 'Nivel 1\nGris', () => this.startLevel(1)),
@@ -345,6 +349,11 @@ class Game {
 
   setGridSize(size) {
     this.gridSize = size;
+    this.createLevelSelectButtons();
+    this.render();
+  }
+  setDificultad(dificultad) {
+    this.dificultad = dificultad;
     this.createLevelSelectButtons();
     this.render();
   }
@@ -386,6 +395,18 @@ class Game {
     this.moves = 0;
     this.timer = 0;
     this.helpUsed = false;
+
+    // 🔹 Definir cantidad de filas y columnas según nivel
+    if (this.dificultad === 1) {
+        this.cols = 2;
+        this.rows = 2; // 4 piezas
+    } else if (this.dificultad === 2) {
+        this.cols = 3;
+        this.rows = 2; // 6 piezas
+    } else if (this.dificultad === 3) {
+        this.cols = 4;
+        this.rows = 2; // 8 piezas
+    }
 
     // Selección random de imagen
     const randomIndex = Math.floor(Math.random() * this.images.length);
@@ -436,22 +457,66 @@ class Game {
     });
   }
 
-  createPieces() {
+ createPieces() {
+    // 🔹 Limpia el array de piezas
     this.pieces = [];
-    const pieceSize = this.gameAreaSize / this.gridSize;
 
-    for (let row = 0; row < this.gridSize; row++) {
-      for (let col = 0; col < this.gridSize; col++) {
-        this.pieces.push(new BlockaPiece(
-          col * pieceSize,
-          row * pieceSize,
-          pieceSize,
-          col * pieceSize * (this.currentImage.width / this.gameAreaSize),
-          row * pieceSize * (this.currentImage.height / this.gameAreaSize)
-        ));
-      }
+    // 🔹 Usa el lado más grande (entre columnas y filas)
+    const mayorDimension = Math.max(this.rows, this.cols);
+
+    // 🔹 Tamaño base (lado del canvas que querés usar, por ejemplo 600)
+    const tamañoPiezaBase = this.gameAreaSize / mayorDimension;
+
+    // 🔹 Calcula dimensiones reales del tablero
+    const boardWidth = this.cols * tamañoPiezaBase;
+    const boardHeight = this.rows * tamañoPiezaBase;
+
+    // 🔹 (Opcional) guardarlas si las usás luego en renderGame
+    this.boardWidth = boardWidth;
+    this.boardHeight = boardHeight;
+
+    // 🔹 Calcula relación de aspecto imagen vs tablero
+    const relacionImagen = this.currentImage.width / this.currentImage.height;
+    const relacionTablero = this.cols / this.rows;
+
+    // 🔹 Área de imagen a usar (por si hay que recortar)
+    let anchoImagenUsada = this.currentImage.width;
+    let altoImagenUsada = this.currentImage.height;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (relacionImagen < relacionTablero) {
+        // Imagen más "vertical" → recortamos arriba/abajo
+        altoImagenUsada = this.currentImage.width / relacionTablero;
+        offsetY = (this.currentImage.height - altoImagenUsada) / 2;
+    } else if (relacionImagen > relacionTablero) {
+        // Imagen más "horizontal" → recortamos izquierda/derecha
+        anchoImagenUsada = this.currentImage.height * relacionTablero;
+        offsetX = (this.currentImage.width - anchoImagenUsada) / 2;
     }
-  }
+
+    // 🔹 Dimensiones del recorte de origen (imagen)
+    const anchoOrigen = anchoImagenUsada / this.cols;
+    const altoOrigen = altoImagenUsada / this.rows;
+
+    // 🔹 Dimensiones de destino (canvas)
+    const tamañoDestino = tamañoPiezaBase;
+
+    // 🔹 Crear cada pieza
+    for (let row = 0; row < this.rows; row++) {
+        for (let col = 0; col < this.cols; col++) {
+            const pieza = new BlockaPiece(
+                col * tamañoDestino,       // X destino (en canvas)
+                row * tamañoDestino,       // Y destino (en canvas)
+                tamañoDestino,             // tamaño de pieza cuadrada
+                offsetX + col * anchoOrigen, // X origen (imagen)
+                offsetY + row * altoOrigen   // Y origen (imagen)
+            );
+
+            this.pieces.push(pieza);
+        }
+    }
+}
 
   checkVictory() {
     return this.pieces.every(p => p.isCorrect());
@@ -484,7 +549,7 @@ class Game {
   }
 
   startTimer() {
-    const maxTime = this.maxTimePerDifficulty[this.gridSize] || 120;
+    const maxTime = this.maxTimePerDifficulty[this.dificultad] || 120;
     this.timerInterval = setInterval(() => {
       this.timer++;
 
@@ -617,13 +682,14 @@ class Game {
     this.ctx.font = 'bold 24px "Segoe UI"';
     this.ctx.textAlign = 'left';
     this.ctx.fillText(`Nivel ${this.currentLevel}`, infoX, infoStartY);
-    const maxTime = this.maxTimePerDifficulty[this.gridSize] || 120;
+    const maxTime = this.maxTimePerDifficulty[this.dificultad] || 120;
     this.ctx.fillText(`⏱ Tiempo: ${this.formatTime(this.timer)} / ${this.formatTime(maxTime)}`, infoX, infoStartY + 50);
     this.ctx.fillText(`🔄 Movimientos: ${this.moves}`, infoX, infoStartY + 100);
 
     // Área del juego a la izquierda
     const offsetX = 25;
-    const offsetY = 0;
+    const boardHeight = this.rows * (this.gameAreaSize / Math.max(this.rows, this.cols));
+    const offsetY = (this.canvas.height - boardHeight) / 2;
 
     this.ctx.save();
     this.ctx.translate(offsetX, offsetY);
