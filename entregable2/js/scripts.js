@@ -164,11 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Usado en: home.html (redirige a game.html cuando corresponde)
       if (playBtn) {
         playBtn.addEventListener('click', function () {
-          // Verifica si la tarjeta activa tiene alt="Juego 1"
-          const activeCard = carousel.querySelector('.card.active img');
-          if (activeCard && activeCard.getAttribute('alt') === 'Juego 1') {
-            window.location.href = 'game.html';
-          }
+            window.location.href = 'game.html';   
         });
       }
   }
@@ -214,12 +210,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // botón correspondiente. No se guarda en servidor; sólo DOM.
   // Usado en: game.html
   document.querySelectorAll('.btn-like').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var likesSpan = btn.previousElementSibling;
-      var likes = parseInt(likesSpan.textContent, 10) || 0;
-      likesSpan.textContent = likes + 1;
-    });
+  btn.addEventListener('click', function() {
+    // Si ya tiene la clase 'liked', no hace nada
+    if (btn.classList.contains('liked')) return;
+
+    var likesSpan = btn.previousElementSibling;
+    var likes = parseInt(likesSpan.textContent, 10) || 0;
+    likesSpan.textContent = likes + 1;
+
+    // Marca el botón como que ya fue clickeado
+    btn.classList.add('liked');
   });
+});
 });
 // Función para agregar redirección a botones
 // selector = la clase o id del botón, url = a dónde queremos ir
@@ -315,6 +317,10 @@ function manejarLogin({
   // Qué hace: previene el envio por defecto y redirige si el botón está habilitado
   btn.addEventListener("click", function(e) {
     e.preventDefault();
+    if (!form.checkValidity()) {
+    alert("Por favor completa el mail correctamente.") // bloquea el envío si no pasa la validación HTML
+    return;
+  }
     if (btn.disabled) return;
     window.location.href = redireccion;
   });
@@ -371,6 +377,10 @@ function manejarRegistro({
   btn.addEventListener("click", function(e) {
   e.preventDefault();
   if (btn.disabled) return;
+  if (!form.checkValidity()) {
+    alert("Por favor completa el mail correctamente.") // bloquea el envío si no pasa la validación HTML
+    return;
+  }
 
   const overlay = form.querySelector(".like-overlay");
   if (overlay) {
@@ -604,4 +614,9 @@ document.addEventListener('click', (e) => {
   if (!userMenu.contains(e.target) && !userButton.contains(e.target)) {
     userMenu.classList.remove('active');
   }
+});
+
+//tocar en hazte premium lleva a home
+document.querySelector('.btn-premium-desktop').addEventListener('click', function() {
+  window.location.href = 'home.html';
 });

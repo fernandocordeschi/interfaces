@@ -1443,8 +1443,7 @@ body {
 
     .tituloJuego,
     .textoJuego,
-    .textoAyuda,
-    .subtituloAyuda {
+    .textoAyuda {
         text-align: left;
         margin-left: 40px;
     }
@@ -1514,25 +1513,45 @@ body {
 
     .input-comentario-row {
         width: 100%;
-        max-width: 1300px;
         margin: 32px auto 0 auto;
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 8px;
-
         position: relative;
         /* importante para que el icono absoluto quede relativo a este contenedor */
+    }
+        .comentario-user-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+    .input-comentario {
+        width: 100%;
+        padding: 12px 18px 12px 50px;
+        /* espacio para el icono */
+        border-radius: 16px;
+        border: none;
+        font-size: 1.08em;
+        background: #fff;
+        color: #222;
+        box-sizing: border-box;
+        outline: none;
+        margin: 0 auto;
+    }
+
+    .input-comentario::placeholder {
+        color: #888;
+        font-size: 1em;
     }
 
     .contenedor-comentador {
         background: none;
         padding: 0;
         border-radius: 0;
-        margin-left: 120px;
-        margin-bottom: 10px;
-        max-width: 1300px;
-        width: 100%;
+        margin: 0 auto 20px auto;
+        width: 90%;
         display: block;
         flex-direction: column;
         align-items: center;
@@ -1564,25 +1583,7 @@ body {
         /* pequeño feedback al pasar el mouse */
     }
 
-    .input-comentario {
-        width: 100%;
-        max-width: 1200px;
-        padding: 12px 18px 12px 50px;
-        /* espacio para el icono */
-        border-radius: 16px;
-        border: none;
-        font-size: 1.08em;
-        background: #fff;
-        color: #222;
-        box-sizing: border-box;
-        outline: none;
-        margin: 0 auto;
-    }
-
-    .input-comentario::placeholder {
-        color: #888;
-        font-size: 1em;
-    }
+    
 
     /* Comentarios tabs */
     .comentarios-switch {
@@ -2473,6 +2474,16 @@ body {
         margin-top: 0px;
     }
 
+    .btn-feedback img {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-feedback img:hover {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+
     .textoAyuda {
         font-family: "Inter", sans-serif;
         font-size: 20px;
@@ -2483,13 +2494,14 @@ body {
     }
 
     .contenedor-ayuda {
-        max-width: 1300px;
-        margin: 0 auto 20px auto;
+        width: auto;
+        margin: 0 115px 20px 115px;
         padding: 10px;
         background-color: #5153A0;
         border-radius: 20px;
         box-shadow: 0 2px 8px rgba(16, 17, 75, 0.10);
         font-family: "Inter", sans-serif;
+        letter-spacing: 0.5px;
     }
 
     .subtituloAyuda {
@@ -2511,23 +2523,23 @@ body {
         font-family: "Inter", sans-serif;
     }
 
-    .contenedor-muestra .card {
+    .contenedor-muestra .card-muestra {
         width: 400px;
         /* Podés ajustar el tamaño */
-        border-radius: 12px;
+        border-radius: 12px 12px 0 0;
         overflow: hidden;
         margin-left: 30px;
     }
 
-    .contenedor-muestra .card img {
+    .contenedor-muestra .card-muestra img {
         width: 100%;
         display: block;
     }
 
-    .contenedor-muestra .card .texto {
+
+    .contenedor-muestra .card-muestra .texto {
         font-family: "Inter", sans-serif;
         background-color: #5952c3;
-        /* Color similar al de tu imagen */
         color: white;
         text-align: center;
         padding: 10px;
@@ -2576,7 +2588,7 @@ body {
 
     .icono-comentario {
         position: absolute;
-        left: 60px;
+        left: 20px;
         /* ajustar según el padding del input */
         top: 50%;
         transform: translateY(-50%);
@@ -2601,4 +2613,52 @@ body {
         border-radius: 50%;
     }
 
+    .btn-like {
+        margin-left: 10px;
+    }
+
+    .btn-like.liked {
+        filter: brightness(1.3);
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    
+
+    footer {
+        justify-content: space-between;
+        margin: 0;
+    }
+
+    
+
+    .footer-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 90%;
+        text-align: left;
+        gap: 400px;
+    }
+
+
+    .footer-links {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 50%;
+        align-items: flex-start;
+        margin-top: 0;
+    }
+
+    main .juego-container {
+        max-width: auto;
+        /* límite de ancho */
+        margin: auto;
+        /* centra horizontalmente */
+        padding: 0 16px;
+        /* agrega respiro a los costados */
+        box-sizing: border-box;
+        /* evita que padding agrande el ancho total */
+    }
+
+    
 }
