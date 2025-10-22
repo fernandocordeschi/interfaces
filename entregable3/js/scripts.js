@@ -506,7 +506,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Duración total de la animación de carga en milisegundos.
   // Cámbiala si querés que el loader dure más o menos tiempo.
   // Usado en: home.html
-  const loaderDurationMs = 5000; // 5000 ms = 5 segundos (antes: 5000 ms)
+  const loaderDurationMs = 500; // 5000 ms = 5 segundos (antes: 5000 ms)
   const intervalTime = loaderDurationMs / 100; // dividir en 100 pasos
 
   const interval = setInterval(() => {

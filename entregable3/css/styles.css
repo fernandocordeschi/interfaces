@@ -787,12 +787,14 @@ body {
 }
 
 .carousel .card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* rellena y recorta la imagen */
-    border-radius: 15px;
-    background: #222;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center; /* 🔹 enfoca la parte superior */
+  border-radius: 15px;
+  background: #222;
+  object-position: 50% 5%; /* 50% horizontal (centro), 15% vertical (más arriba) */
+
 }
 
 /* Tarjeta activa */
