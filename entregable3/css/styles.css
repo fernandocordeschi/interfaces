@@ -1891,7 +1891,7 @@ body {
 
     /* Botones para login con redes sociales */
     .btn-facebook-login,
-    .btn-google-login {
+    .btn-google-login, .btn-red-social {
         padding: 10px 20px;
         /* Aumenté el padding */
         border-radius: 30px;
