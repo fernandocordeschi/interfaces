@@ -178,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
 });
+
 // Comentarios: alternar entre destacados y recientes
 /*
   Handler: controla la pestaña de comentarios (destacados vs recientes) y
@@ -271,9 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
-// ============================
-// FUNCION PARA MANEJAR LOGIN
-// ============================
+
 // ============================
 // FUNCION PARA MANEJAR LOGIN
 // ============================
@@ -335,9 +334,6 @@ function manejarLogin({
   });
 }
 
-// ============================
-// FUNCION PARA MANEJAR REGISTRO
-// ============================
 // ============================
 // FUNCION PARA MANEJAR REGISTRO
 // ============================
@@ -529,7 +525,10 @@ document.addEventListener("DOMContentLoaded", function() {
   }, intervalTime);
 });
 
-// ====== Carousel simple para home ======
+
+// ============================
+// Carousel simple para home
+// ============================ 
 /*
   Handler: carrusel ligero usado en la home. Similar al carrusel principal,
   mantiene el índice actual y actualiza clases `active`, `prev`, `next`.
