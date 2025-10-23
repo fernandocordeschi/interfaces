@@ -186,6 +186,15 @@ this.ctx.textBaseline = 'middle';
 
     // Dibujar botones
     this.buttons.forEach(btn => btn.draw(this.ctx));
+
+      if (!this.previewAnimationDone) {
+    const opacity = 0.6 + 0.4 * Math.sin(Date.now() / 250);
+    this.ctx.font = '24px "Segoe UI"';
+    this.ctx.fillStyle = `rgba(230, 57, 70, ${opacity})`; // rojo suave animado
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'top';
+    this.ctx.fillText('🧩 Eligiendo imagen a resolver...', this.canvas.width / 2, this.canvas.height - 60);
+  }
   }
 
   async loadThumbnail(src, size) {
