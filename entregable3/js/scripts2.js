@@ -318,7 +318,7 @@ class Game {
       new Button(550, 250, 180, 100, 'Nivel 2\nOscuro', () => this.startLevel(2)),
       new Button(750, 250, 180, 100, 'Nivel 3\nInvertido', () => this.startLevel(3)),
 
-      new Button(450, 400, 300, 50, 'Volver', () => this.showMenu(),
+      new Button(450, 400, 300, 50, '↩️ Volver', () => this.showMenu(),
         { fillColor: '#f0f0f0', textColor: '#333' })
     ];
   }
@@ -368,7 +368,7 @@ class Game {
   showInstructions() {
     this.currentScreen = 'instructions';
     this.buttons = [
-      new Button(450, 520, 300, 50, 'Volver', () => this.showMenu(),
+      new Button(450, 520, 300, 50, '↩️ Volver', () => this.showMenu(),
         { fillColor: '#f0f0f0', textColor: '#333' })
     ];
     this.render();
@@ -383,7 +383,7 @@ class Game {
   showGallery() {
     this.currentScreen = 'gallery';
     this.buttons = [
-      new Button(450, 520, 300, 50, 'Volver', () => this.showMenu(),
+      new Button(450, 520, 300, 50, '↩️ Volver', () => this.showMenu(),
         { fillColor: '#f0f0f0', textColor: '#333' })
     ];
     this.render();
@@ -624,7 +624,7 @@ class Game {
     this.ctx.fillStyle = '#667eea';
     this.ctx.font = 'bold 48px "Segoe UI"';
     this.ctx.textAlign = 'center';
-    this.ctx.fillText('BLOCKA', 600, 100);
+    this.ctx.fillText('🎮 BLOCKA', 600, 100);
 
     this.ctx.font = '24px "Segoe UI"';
     this.ctx.fillStyle = '#666';
@@ -635,7 +635,7 @@ class Game {
     this.ctx.fillStyle = '#333';
     this.ctx.font = 'bold 32px "Segoe UI"';
     this.ctx.textAlign = 'center';
-    this.ctx.fillText('Instrucciones', 600, 50);
+    this.ctx.fillText('ℹ️ Instrucciones', 600, 50);
 
     this.ctx.font = '16px "Segoe UI"';
     this.ctx.textAlign = 'left';
@@ -667,10 +667,10 @@ class Game {
     this.ctx.fillStyle = '#333';
     this.ctx.font = 'bold 32px "Segoe UI"';
     this.ctx.textAlign = 'center';
-    this.ctx.fillText('Selecciona un Nivel', 600, 60);
+    this.ctx.fillText('🎚️ Selecciona un Nivel', 600, 60);
 
     this.ctx.font = '20px "Segoe UI"';
-    this.ctx.fillText('Dificultad:', 600, 120);
+    this.ctx.fillText('⚡ Dificultad:', 600, 120);
   }
 
   renderGame() {
