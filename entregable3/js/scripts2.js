@@ -640,22 +640,22 @@ class Game {
     this.ctx.font = '16px "Segoe UI"';
     this.ctx.textAlign = 'left';
     const instructions = [
-      'OBJETIVO:',
+      '🎯 OBJETIVO:',
       'Rota todas las piezas hasta su posición correcta',
       '',
-      'CONTROLES:',
-      '• Click Izquierdo: Rotar antihorario',
-      '• Click Derecho: Rotar horario',
+      '🕹️ CONTROLES:',
+      '• 🖱️ Click Izquierdo: Rotar antihorario',
+      '• 🖱️ Click Derecho: Rotar horario',
       '',
-      'NIVELES:',
-      '• Nivel 1: Escala de grises',
-      '• Nivel 2: Bajo brillo',
-      '• Nivel 3: Colores invertidos',
+      '🎚️ NIVELES:',
+      '• 🩶 Nivel 1: Escala de grises',
+      '• 🌙 Nivel 2: Bajo brillo',
+      '• 🎨 Nivel 3: Colores invertidos',
       '',
-      'CARACTERÍSTICAS:',
-      '• Temporizador para medir tu tiempo',
-      '• Botón de ayuda (+5 segundos)',
-      '• Elige dificultad: 4, 9 o 16 piezas'
+      '⭐ CARACTERÍSTICAS:',
+      '• ⏱️ Temporizador para medir tu tiempo',
+      '• 🆘 Botón de ayuda (+5 segundos)',
+      '• 🔢 Elige dificultad: 4, 6 o 16 piezas'
     ];
 
     instructions.forEach((line, i) => {
