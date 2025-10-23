@@ -284,9 +284,9 @@ class Game {
 
   createMenuButtons() {
     this.buttons = [
-      new Button(450, 200, 300, 60, 'Jugar', () => this.showLevelSelect()),
-      new Button(450, 280, 300, 60, 'Instrucciones', () => this.showInstructions()),
-      new Button(450, 360, 300, 60, 'Galería', () => this.showGallery())
+      new Button(450, 200, 300, 60, '▶️ Jugar', () => this.showLevelSelect()),
+      new Button(450, 280, 300, 60, 'ℹ️ Instrucciones', () => this.showInstructions()),
+      new Button(450, 360, 300, 60, '🖼️ Galería', () => this.showGallery())
     ];
   }
 
@@ -298,25 +298,25 @@ class Game {
 
   createLevelSelectButtons() {
     this.buttons = [
-      new Button(400, 150, 150, 50, 'Fácil (4 P)', () => this.setDificultad(1),
+      new Button(380, 150, 150, 50, 'Fácil (4 P)', () => this.setDificultad(1),
         {
           fillColor: this.dificultad === 1 ? '#667eea' : '#f0f0f0',
           textColor: this.dificultad === 1 ? '#fff' : '#333'
         }),
-      new Button(540, 150, 150, 50, 'Medio (6 P)', () => this.setDificultad(2),
+      new Button(520, 150, 150, 50, 'Medio (6 P)', () => this.setDificultad(2),
         {
           fillColor: this.dificultad === 2 ? '#667eea' : '#f0f0f0',
           textColor: this.dificultad === 2 ? '#fff' : '#333'
         }),
-      new Button(680, 150, 150, 50, 'Difícil (8 P)', () => this.setDificultad(3),
+      new Button(660, 150, 150, 50, 'Difícil (8 P)', () => this.setDificultad(3),
         {
           fillColor: this.dificultad === 3 ? '#667eea' : '#f0f0f0',
           textColor: this.dificultad === 3 ? '#fff' : '#333'
         }),
 
-      new Button(350, 250, 180, 100, 'Nivel 1\nGris', () => this.startLevel(1)),
-      new Button(550, 250, 180, 100, 'Nivel 2\nOscuro', () => this.startLevel(2)),
-      new Button(750, 250, 180, 100, 'Nivel 3\nInvertido', () => this.startLevel(3)),
+      new Button(310, 250, 180, 100, 'Nivel 1\nGris', () => this.startLevel(1)),
+      new Button(510, 250, 180, 100, 'Nivel 2\nOscuro', () => this.startLevel(2)),
+      new Button(710, 250, 180, 100, 'Nivel 3\nInvertido', () => this.startLevel(3)),
 
       new Button(450, 400, 300, 50, '↩️ Volver', () => this.showMenu(),
         { fillColor: '#f0f0f0', textColor: '#333' })
@@ -326,23 +326,23 @@ class Game {
   createGameButtons() {
     this.buttons = [
       new Button(700, 520, 200, 50, '💡 Ayuda (+5s)', () => this.useHelp(),
-        { fillColor: '#ffc107', textColor: '#333' }),
-      new Button(920, 520, 180, 50, 'Menú', () => this.showMenu(),
+        { fillColor: '#d4a017', textColor: '#333' }),
+      new Button(920, 520, 180, 50, '☰ Menú', () => this.showMenu(),
         { fillColor: '#f0f0f0', textColor: '#333' })
     ];
   }
 
   createVictoryButtons() {
     this.buttons = [
-      new Button(700, 520, 180, 50, 'Siguiente', () => this.nextLevel()),
-      new Button(900, 520, 180, 50, 'Menú', () => this.showMenu(),
+      new Button(700, 520, 180, 50, '➡️ Siguiente', () => this.nextLevel()),
+      new Button(900, 520, 180, 50, '☰ Menú', () => this.showMenu(),
         { fillColor: '#f0f0f0', textColor: '#333' })
     ];
   }
 
   createDefeatButtons() {
     this.buttons = [
-      new Button(900, 520, 180, 50, 'Menú', () => this.showMenu(),
+      new Button(900, 520, 180, 50, '☰ Menú', () => this.showMenu(),
         { fillColor: '#ff5252', textColor: '#333' })
     ];
   }
@@ -667,10 +667,10 @@ class Game {
     this.ctx.fillStyle = '#333';
     this.ctx.font = 'bold 32px "Segoe UI"';
     this.ctx.textAlign = 'center';
-    this.ctx.fillText('🎚️ Selecciona un Nivel', 600, 60);
+    this.ctx.fillText('🎚️ Selecciona un Nivel', 580, 60);
 
     this.ctx.font = '20px "Segoe UI"';
-    this.ctx.fillText('⚡ Dificultad:', 600, 120);
+    this.ctx.fillText('⚡ Dificultad:', 570, 120);
   }
 
   renderGame() {
@@ -681,7 +681,7 @@ class Game {
     this.ctx.fillStyle = '#333';
     this.ctx.font = 'bold 24px "Segoe UI"';
     this.ctx.textAlign = 'left';
-    this.ctx.fillText(`Nivel ${this.currentLevel}`, infoX, infoStartY);
+    this.ctx.fillText(`⭐ Nivel ${this.currentLevel}`, infoX, infoStartY);
     const maxTime = this.maxTimePerDifficulty[this.dificultad] || 120;
     this.ctx.fillText(`⏱ Tiempo: ${this.formatTime(this.timer)} / ${this.formatTime(maxTime)}`, infoX, infoStartY + 50);
     this.ctx.fillText(`🔄 Movimientos: ${this.moves}`, infoX, infoStartY + 100);
