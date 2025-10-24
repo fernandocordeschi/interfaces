@@ -680,7 +680,7 @@ this.ctx.textBaseline = 'middle';
       '⭐ CARACTERÍSTICAS:',
       '• ⏱️ Temporizador para medir tu tiempo',
       '• 🆘 Botón de ayuda (+5 segundos)',
-      '• 🔢 Elige dificultad: 4, 6 o 16 piezas'
+      '• 🔢 Elige dificultad: 4, 6 u 8 piezas'
     ];
 
     instructions.forEach((line, i) => {
