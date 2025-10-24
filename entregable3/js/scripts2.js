@@ -673,7 +673,7 @@ this.ctx.textBaseline = 'middle';
       '• 🖱️ Click Derecho: Rotar horario',
       '',
       '🎚️ NIVELES:',
-      '• 🩶 Nivel 1: Escala de grises',
+      '• ⭐ Nivel 1: Escala de grises',
       '• 🌙 Nivel 2: Bajo brillo',
       '• 🎨 Nivel 3: Colores invertidos',
       '',
