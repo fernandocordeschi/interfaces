@@ -153,10 +153,8 @@ class PegSolitaire {
         
         // Tipos de planetas
         this.planetTypes = [
-            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Planeta Rojo', 'planeta1.png'),
-            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Planeta Azul', 'planeta2.png'),
-            new PlanetType(['#ffe66d', '#ffd93d'], '#ffe66d', 'Planeta Dorado', 'planeta3.png'),
-            new PlanetType(['#95e1d3', '#7dd5c0'], '#00ff15ff', 'Planeta Verde', 'planeta4.png')
+            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Homero', 'bart.png'),
+            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Bart', 'homero.png'),
         ];
 
         
@@ -265,7 +263,7 @@ class PegSolitaire {
         this.ctx.fillStyle = '#00ffff';
         this.ctx.font = 'bold 48px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('🚀 PEG SOLITAIRE ESPACIAL 🌌', this.canvas.width / 2, 60);
+        this.ctx.fillText('PEG SOLITAIRE Homer vs Bart – La Batalla del Sofá', this.canvas.width / 2, 60);
         this.ctx.shadowBlur = 0;
     }
 
