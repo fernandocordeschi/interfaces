@@ -1,12 +1,14 @@
 // solo para blocka.html
+
+//representa un botón gráfico con posición, tamaño, texto, colores y comportamiento al hacer clic
 class Button {
   constructor(x, y, width, height, text, onClick, style = {}) {
-    this.x = x;
-    this.y = y;
+    this.x = x; //posicion (coordenada x) del boton
+    this.y = y; //posicion (coordenada y) del boton
     this.width = width;
     this.height = height;
-    this.text = text;
-    this.onClick = onClick;
+    this.text = text; //texto que se muestra en el boton
+    this.onClick = onClick; //funcion que se ejecuta al hacer clic en el boton
     this.style = {
       fillColor: style.fillColor || '#667eea',
       textColor: style.textColor || '#ffffff',
@@ -14,17 +16,21 @@ class Button {
       fontSize: style.fontSize || 20,
       ...style
     };
-    this.isHovered = false;
+    this.isHovered = false; //indica si el cursor esta sobre el boton
   }
 
+
+  //Verifica si un punto (x, y) está dentro del área del botón.
+  // Devuelve true si el mouse o un clic están dentro del rectángulo del botón.
   contains(x, y) {
     return x >= this.x && x <= this.x + this.width &&
       y >= this.y && y <= this.y + this.height;
   }
 
+  //dibuja el boton en el contexto de canvas proporcionado (ctx)
   draw(ctx) {
-    ctx.fillStyle = this.isHovered ? this.style.hoverColor : this.style.fillColor;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = this.isHovered ? this.style.hoverColor : this.style.fillColor; //Si el mouse está encima (isHovered === true), usa hoverColor. si no fillColor
+    ctx.fillRect(this.x, this.y, this.width, this.height); //Dibuja el rectángulo del botón
 
     ctx.fillStyle = this.style.textColor;
     ctx.font = `bold ${this.style.fontSize}px "Segoe UI"`;
@@ -33,50 +39,59 @@ class Button {
     ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
   }
 
+  //Actualiza el estado isHovered:
+  // Llama a contains(x, y) con las coordenadas del mouse.
+  // Si el mouse está dentro del botón, isHovered = true; si no, false.
+
   checkHover(x, y) {
     this.isHovered = this.contains(x, y);
   }
 }
 
-class BlockaPiece {
+
+
+//representa una pieza cuadrada de un rompecabezas o bloque de juego que puede rotarse, 
+// comprobar si está correctamente orientada y detectar clics o posiciones del mouse dentro de su área.
+class BlockaPiece { //Cada instancia representa una pieza del juego
   constructor(x, y, size, sourceX, sourceY) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.sourceX = sourceX;
-    this.sourceY = sourceY;
-    this.rotation = Math.floor(Math.random() * 4) * 90;
-    this.correctRotation = 0;
-    this.isFixed = false;
+    this.x = x; //posición x donde se dibujará la pieza en el canvas.
+    this.y = y; //posición y donde se dibujará la pieza en el canvas.
+    this.size = size; // tamaño (ancho y alto) de la pieza cuadrada.
+    this.sourceX = sourceX; //coordenada x de la porción de la imagen original que corresponde a esta pieza.
+    this.sourceY = sourceY; //coordenada y de la porción de la imagen original que corresponde a esta pieza.
+    this.rotation = Math.floor(Math.random() * 4) * 90; //rotación inicial aleatoria (0, 90, 180 o 270 grados).
+    this.correctRotation = 0;  //rotación correcta (la que debería tener cuando está bien orientada).
+    this.isFixed = false; //Indica si la pieza está fijada (ya colocada correctamente y no puede girarse más).
   }
 
   rotate(direction) {
-    if (this.isFixed) return;
-    if (direction === "left") {
-      this.rotation = (this.rotation - 90 + 360) % 360;
-    } else {
-      this.rotation = (this.rotation + 90) % 360;
+    if (this.isFixed) return; //Si la pieza está fijada (isFixed === true), no hace nada (se sale del método).
+    if (direction === "left") { //Si direction es "left" → rota 90° hacia la izquierda (resta 90).
+      this.rotation = (this.rotation - 90 + 360) % 360; // % 360 asegura que la rotación siempre se mantenga entre 0° y 359°.
+    } else { //+360 evita números negativos antes del módulo
+      this.rotation = (this.rotation + 90) % 360; //Si no, rota 90° hacia la derecha (suma 90).
     }
   }
 
-  isCorrect() {
-    return this.rotation === this.correctRotation;
+  isCorrect() { //
+    return this.rotation === this.correctRotation; //Devuelve true si la pieza está en la rotación correcta,
+    // es decir, si rotation coincide con correctRotation
   }
 
-  contains(x, y) {
+  contains(x, y) { //Verifica si un punto (x, y) está dentro del área cuadrada de la pieza.
     return x >= this.x && x <= this.x + this.size &&
       y >= this.y && y <= this.y + this.size;
-  }
+  } //Usado para detectar clics o selección con el mouse.
 }
 
 class Game {
   constructor() {
-    this.canvas = document.getElementById('gameCanvas');
-    this.ctx = this.canvas.getContext('2d');
+    this.canvas = document.getElementById('gameCanvas'); //Obtiene el elemento <canvas> donde se dibuja todo,
+    this.ctx = this.canvas.getContext('2d'); // y su contexto 2D para poder dibujar rectángulos, texto, imágenes, etc.
     // Evita que el texto del menú se "mueva" en el primer hover
-this.ctx.font = '24px "Segoe UI"';
-this.ctx.textAlign = 'center';
-this.ctx.textBaseline = 'middle';
+    this.ctx.font = '24px "Segoe UI"';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
     //banco de imagenes
     this.images = [
       "images/simpsons1.jpg",
@@ -87,33 +102,39 @@ this.ctx.textBaseline = 'middle';
       "images/simpsons6.jpg"
     ];
 
-    this.currentScreen = 'menu';
-    this.currentLevel = 1;
-    this.dificultad = 1
-    this.gridSize = 2;
-    this.pieces = [];
-    this.currentImage = null;
-    this.timer = 0;
+    this.currentScreen = 'menu'; //// Pantalla actual: menu, game, victory, etc.
+    this.currentLevel = 1; // Nivel de dificultad visual (gris, oscuro, invertido)
+    this.dificultad = 1 // Cantidad de piezas
+    this.gridSize = 2; // Cantidad de divisiones base
+    this.pieces = []; // Piezas del rompecabezas
+    this.currentImage = null; // Imagen actual seleccionada
+    this.timer = 0;  // Contador de tiempo
     this.maxTimePerLevel = {
-      1: 20,  // Nivel 1: 1 minuto
-      2: 40,  // Nivel 2: 1 minuto 30 segundos
-      3: 80  // Nivel 3: 2 minutos
+      1: 20,  // Nivel 1: 20s
+      2: 40,  // Nivel 2: 40s
+      3: 80  // Nivel 3: 80s
     };
     this.maxTimePerDifficulty = {
-      1: 10,  // Fácil (4 piezas) → 1 minuto
-      2: 30,  // Medio (9 piezas) → 1:30
-      3: 50  // Difícil (16 piezas) → 2 minutos
+      1: 10,  // Fácil (4 piezas) → 10s
+      2: 30,  // Medio (9 piezas) → 30s
+      3: 50  // Difícil (16 piezas) → 50s
     };
-    this.moves = 0;
-    this.helpUsed = false;
+    this.moves = 0; //cantidad de movimientos
+    this.helpUsed = false; // Si se usó ayuda
     this.timerInterval = null;
     this.previewImage = null;  // Imagen completa para vista previa
     this.buttons = [];
 
     this.gameAreaY = 0;
+
+    //Configuración del área de juego
     this.gameAreaSize = 600;
     this.canvasWidth = 1200;
     this.canvasHeight = 600;
+    //Define el tamaño del área donde se renderizan las piezas.
+
+    //Control de miniaturas y animación
+    // Se usan en la pantalla previa, cuando se elige o muestra la imagen antes de jugar.
     this.previewThumbnails = [];        // Array de mini imágenes
     this.galleryThumbnails = [];
     this.selectedImageIndex = null;     // Índice de la imagen seleccionada
@@ -121,49 +142,52 @@ this.ctx.textBaseline = 'middle';
     this.previewAnimationDone = false;  // Si la animación terminó
     this.isChoosingImage = false;
 
-    this.setupEventListeners();
+    // Se configuran los eventos del mouse, se crean los primeros botones del menú principal, y se dibuja la primera pantalla.
+    this.setupEventListeners(); //registra clics, clic derecho y movimiento del mouse.
     this.createMenuButtons();
     this.render();
   }
   renderPreview() {
-    this.ctx.fillStyle = '#ffffff';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = '#ffffff'; //Antes de dibujar nada, borra toda la pantalla llenándola con blanco.
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); //Esto evita que queden restos del dibujo anterior.
 
-    if (!this.previewAnimationDone) {
+    if (!this.previewAnimationDone) { //Si la animación de miniaturas aún está en curso, se dibuja una fila animada de imágenes pequeñas.
       // Mostrar thumbnails en fila centrada
-      const thumbSize = 140;
-      const spacing = 160;
-      const totalWidth = this.previewThumbnails.length * thumbSize + (this.previewThumbnails.length - 1) * (spacing - thumbSize);
-      const startX = (this.canvas.width - totalWidth) / 2;
+      const thumbSize = 140; //tamaño de cada miniatura (140x140 px).
+      const spacing = 160; //separación entre una y otra (160 px).
+      const totalWidth = this.previewThumbnails.length * thumbSize + (this.previewThumbnails.length - 1) * (spacing - thumbSize); //ancho total de la fila completa.
+      const startX = (this.canvas.width - totalWidth) / 2; //punto donde debe comenzar la primera miniatura para que quede centrada en el canvas.
       const totalHeight = thumbSize;
-      const startY = (this.canvas.height - totalHeight) / 2;
+      const startY = (this.canvas.height - totalHeight) / 2; //punto vertical centrado.
 
 
       this.previewThumbnails.forEach((thumb, i) => {
-        const x = startX + i * spacing;
+        const x = startX + i * spacing; //Cada una se dibuja en posición x desplazada según el índice i.
         const y = startY;
-        this.ctx.globalAlpha = 0.5;
+        this.ctx.globalAlpha = 0.5; //globalAlpha = 0.5 → las hace semitransparentes, como fondo.
         this.ctx.drawImage(thumb, x, y, thumbSize, thumbSize);
       });
 
       // Animación del borde rojo
-      const animSpeed = 10; // frames por miniatura
+      const animSpeed = 10; // frames por miniatura, Cada 10 cuadros (animSpeed = 10), el borde rojo pasa a la siguiente imagen.
       const index = Math.floor(this.previewAnimationFrame / animSpeed) % this.previewThumbnails.length;
+      //Usa this.previewAnimationFrame (contador de frames) para saber cuál miniatura destacar en cada momento.
 
-      this.ctx.globalAlpha = 1;
-      this.ctx.strokeStyle = '#ff0000';
+      this.ctx.globalAlpha = 1; //le devuelve la opacidad
+      this.ctx.strokeStyle = '#ff0000'; //Dibuja un borde rojo grueso (4 px) alrededor de la miniatura actualmente seleccionada.
       this.ctx.lineWidth = 4;
       const thumbX = startX + index * spacing;
       const thumbY = startY;
       this.ctx.strokeRect(thumbX, thumbY, thumbSize, thumbSize);
 
-      this.previewAnimationFrame++;
-      requestAnimationFrame(() => this.render());
-    } else {
+      this.previewAnimationFrame++; //avanza la animacion y redibuja
+      requestAnimationFrame(() => this.render()); //Incrementa el contador de frames y vuelve a llamar a this.render() para actualizar la animación en el siguiente frame
+    } else { //Si la animación ya terminó (else)
       // Mostrar solo la imagen final centrada
-      const canvasCenterX = this.canvas.width / 2;
-      const canvasCenterY = this.canvas.height / 2;
-      const maxWidth = 600;
+      //la animación terminó, se muestra solo la imagen elegida centrada en el canvas.
+      const canvasCenterX = this.canvas.width / 2; //Calcula x e y para colocarla exactamente centrada.
+      const canvasCenterY = this.canvas.height / 2; //Calcula x e y para colocarla exactamente centrada.
+      const maxWidth = 600; //Escala la imagen para que no supere 600x600 px.
       const maxHeight = 600;
 
       const img = this.previewThumbnails[this.selectedImageIndex];
@@ -175,7 +199,7 @@ this.ctx.textBaseline = 'middle';
       const y = canvasCenterY - imgHeight / 2;
 
       this.ctx.globalAlpha = 1;
-      this.ctx.drawImage(img, x, y, imgWidth, imgHeight);
+      this.ctx.drawImage(img, x, y, imgWidth, imgHeight); //Muestra la imagen elegida, con opacidad completa.
 
       // Texto encima
       this.ctx.fillStyle = '#ff0000';
@@ -185,36 +209,46 @@ this.ctx.textBaseline = 'middle';
     }
 
     // Dibujar botones
-    this.buttons.forEach(btn => btn.draw(this.ctx));
+    this.buttons.forEach(btn => btn.draw(this.ctx)); //Llama al método draw() de cada botón (de la clase Button) para pintarlos en pantalla: “Volver”, “Jugar”, etc.
 
-      if (!this.previewAnimationDone) {
-    const opacity = 0.6 + 0.4 * Math.sin(Date.now() / 250);
-    this.ctx.font = '24px "Segoe UI"';
-    this.ctx.fillStyle = `rgba(230, 57, 70, ${opacity})`; // rojo suave animado
-    this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'top';
-    this.ctx.fillText('🧩 Eligiendo imagen a resolver...', this.canvas.width / 2, this.canvas.height - 60);
-  }
+    if (!this.previewAnimationDone) {
+      const opacity = 0.6 + 0.4 * Math.sin(Date.now() / 250);
+      this.ctx.font = '24px "Segoe UI"';
+      this.ctx.fillStyle = `rgba(230, 57, 70, ${opacity})`; // rojo suave animado
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'top';
+      this.ctx.fillText('🧩 Eligiendo imagen a resolver...', this.canvas.width / 2, this.canvas.height - 60);
+    }
+    //Si la animación todavía no terminó, se muestra un texto parpadeante en rojo suave.
+    //La opacidad cambia con un efecto de onda senoidal → Math.sin(Date.now() / 250) produce un parpadeo suave.
   }
 
-  async loadThumbnail(src, size) {
-    return new Promise((resolve) => {
+  async loadThumbnail(src, size) { //se encarga de cargar imágenes en memoria (miniaturas o “thumbnails”) de forma asíncrona, antes de mostrarlas en pantalla.
+    return new Promise((resolve) => { //Crea una nueva promesa, que se resolverá (resolve) cuando la imagen haya terminado de cargarse.
       const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => resolve(img);
+      img.crossOrigin = 'anonymous'; //Indica que se permite cargar imágenes de otros dominios (externas) sin credenciales, si vienen de un servidor o carpeta dif las imagenes
+      img.onload = () => resolve(img); //Cuando la imagen termina de cargar correctamente, se ejecuta esta función y resuelve la promesa, devolviendo la imagen (img).
+      //A partir de ahí, el programa sabe que ya puede usarla (por ejemplo, para dibujarla con drawImage()).
       img.src = src;
     });
   }
 
-  applyFilter(imageData) {
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
+
+  //modificar los colores de una imagen directamente a nivel de píxeles, aplicando un filtro visual distinto según el nivel de dificultad del juego.
+  applyFilter(imageData) { //imageData es un objeto del tipo ImageData que contiene toda la información de una imagen ya dibujada o cargada en el canvas.
+    const data = imageData.data; //array de números (Uint8ClampedArray) con los valores de color de cada píxel, en este orden: R, G, B, A (rojo, verde, azul, alfa).
+    //se obtiene una referencia directa al array donde están los valores RGBA de todos los píxeles
+    for (let i = 0; i < data.length; i += 4) { //Se recorre el array de a 4 en 4 pasos, porque cada píxel tiene 4 valores (R, G, B, A).
+      //De esa forma, i siempre apunta al comienzo de un píxel.
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
+      //Se extraen los componentes rojo, verde y azul del píxel actual.
+      // El alfa (data[i + 3]) no se toca, porque normalmente se deja la transparencia igual. 
 
       if (this.currentLevel === 1) {
         // Escala de grises
+        //Convierte el píxel a blanco y negro (gris) usando una fórmula estándar que pondera cada color según cómo lo percibe el ojo humano:
         const gray = 0.299 * r + 0.587 * g + 0.114 * b;
         data[i] = data[i + 1] = data[i + 2] = gray;
       }
@@ -223,82 +257,93 @@ this.ctx.textBaseline = 'middle';
         data[i] = r * 0.3;
         data[i + 1] = g * 0.3;
         data[i + 2] = b * 0.3;
+        //Multiplica cada color por 0.3, reduciendo su brillo al 30% del original.
+        // La imagen se ve más oscura, lo que aumenta la dificultad.
       }
       else if (this.currentLevel === 3) {
         // Invertido
         data[i] = 255 - r;
         data[i + 1] = 255 - g;
         data[i + 2] = 255 - b;
+        //Invierte cada componente de color.
       }
     }
-    return imageData;
+    return imageData; //Devuelve el objeto ImageData ya alterado, listo para volver a dibujarlo en el canvas con ctx.putImageData(imageData, x, y);
   }
+
   setupEventListeners() {
-    this.canvas.addEventListener('click', (e) => this.handleClick(e, 'left'));
-    this.canvas.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
+    this.canvas.addEventListener('click', (e) => this.handleClick(e, 'left')); //escucha los clics normales (izquierdos) sobre el canvas y llama a this.handleClick(e, 'left')
+    this.canvas.addEventListener('contextmenu', (e) => { //detecta el clic derecho del mouse (evento contextmenu)
+      e.preventDefault(); //bloquea ese evento que abriría el menú contextual del navegador (copiar, pegar, etc.
       this.handleClick(e, 'right');
     });
-    this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+    this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e)); //escucha cuando el mouse se mueve dentro del canvas y llama al metodo handlemousemove
+    //Detecta si el cursor está sobre un botón.
+    // Cambia su estado visual (isHovered = true o false).
+    // Provoca que el botón cambie de color o tono, simulando el efecto “hover”.
   }
 
-  getMousePos(e) {
-    const rect = this.canvas.getBoundingClientRect();
+  getMousePos(e) { //convertir las coordenadas del mouse (en toda la ventana) a coordenadas dentro del canvas.
+    const rect = this.canvas.getBoundingClientRect(); //devuelve un objeto con las dimensiones y la posición del elemento <canvas> respecto a la ventana del navegador.
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
+      x: e.clientX - rect.left, //son las coordenadas del mouse en la ventana.
+      y: e.clientY - rect.top //Restando rect.left y rect.top, se obtiene la posición relativa al canvas..
+    };//Retorna un objeto con las coordenadas ya ajustadas,
   }
 
-  handleMouseMove(e) {
-    const pos = this.getMousePos(e);
-    let needsRedraw = false;
+  handleMouseMove(e) { //controla lo que ocurre cuando el jugador mueve el mouse sobre el canvas.
+    const pos = this.getMousePos(e); //traducir la posición del mouse desde las coordenadas de pantalla
+    let needsRedraw = false; //para saber si hubo algún cambio visual que requiere volver a renderizar el canvas.
 
     this.buttons.forEach(btn => {
-      const wasHovered = btn.isHovered;
-      btn.checkHover(pos.x, pos.y);
-      if (wasHovered !== btn.isHovered) needsRedraw = true;
+      const wasHovered = btn.isHovered; //Guarda el estado anterior del botón (si el mouse estaba encima o no).
+      btn.checkHover(pos.x, pos.y); //Llama al método del botón que comprueba si el mouse está dentro de su área:
+      if (wasHovered !== btn.isHovered) needsRedraw = true; //hay que volver a dibujar el canvas, porque el botón debe cambiar de color.
     });
 
-    if (needsRedraw) this.render();
+    if (needsRedraw) this.render(); //Si se detectó al menos un cambio de estado de hover,
+    // se llama a this.render(), que redibuja toda la escena:
   }
 
+
+
+  //interpretar qué fue clickeado (una pieza del puzzle o un botón) y actuar en consecuencia (rotar piezas, contar movimientos, o ejecutar acciones de botones)
   handleClick(e, direction) {
-  const pos = this.getMousePos(e);
+    const pos = this.getMousePos(e); //convertir las coordenadas globales del clic (e.clientX, e.clientY) a coordenadas dentro del canvas.
 
-  if (this.currentScreen === 'game' && direction !== 'menu') {
-    const offsetX = 25;
-    const boardHeight = this.rows * (this.gameAreaSize / Math.max(this.rows, this.cols));
-    const offsetY = (this.canvas.height - boardHeight) / 2; // 🔹 mismo offsetY del render
+    if (this.currentScreen === 'game' && direction !== 'menu') { //solo se ejecuta si el jugador está en la pantalla de juego
+      const offsetX = 25; //el tablero está desplazado 25 px hacia la derecha.
+      const boardHeight = this.rows * (this.gameAreaSize / Math.max(this.rows, this.cols)); //calcula la altura total del tablero según el número de filas y el tamaño asignado a cada pieza.
+      const offsetY = (this.canvas.height - boardHeight) / 2; // 🔹 mismo offsetY del render,  centra verticalmente el tablero dentro del canvas, igual que en el método render()
 
-    // ahora el clic se compara correctamente dentro del tablero
-    const piece = this.pieces.find(p =>
-      p.contains(pos.x - offsetX, pos.y - offsetY)
-    );
+      // ahora el clic se compara correctamente dentro del tablero
+      const piece = this.pieces.find(p => //this.pieces es el array de todas las piezas del puzzle.
+        p.contains(pos.x - offsetX, pos.y - offsetY) //true si el punto (clic) está dentro del área de la pieza.
+      );
 
-    if (piece && !piece.isFixed) {
-      piece.rotate(direction);
-      this.moves++;
-      this.render();
+      if (piece && !piece.isFixed) { //clickeó una pieza que no está fija (isFixed = false)
+        piece.rotate(direction); //la gira
+        this.moves++; //aumenta el contador
+        this.render(); //para mostrar la pieza rotada
 
-      if (this.checkVictory()) {
-        this.handleVictory();
+        if (this.checkVictory()) { //Si todas las piezas están en su orientación correcta, se ejecuta la secuencia de victoria.
+          this.handleVictory();
+        }
+        return; //Si todas las piezas están en su orientación correcta, se ejecuta la secuencia de victoria.
       }
-      return;
     }
-  }
 
-  this.buttons.forEach(btn => {
-    if (btn.contains(pos.x, pos.y)) {
-      btn.onClick();
-    }
-  });
-}
+    this.buttons.forEach(btn => { //Si no fue una pieza → comprobar botones , se revisa cada botón de la pantalla actual.
+      if (btn.contains(pos.x, pos.y)) { // determina si el clic ocurrió dentro del área del botón.
+        btn.onClick(); //Si es así, ejecuta su acción:
+      }
+    });
+  }
 
 
   createMenuButtons() {
     this.buttons = [
-      new Button(450, 200, 300, 60, '▶️ Jugar', () => this.showLevelSelect()),
+      new Button(450, 200, 300, 60, '▶️ Jugar', () => this.showLevelSelect()), //Cada botón se posiciona con (x, y, width, height)
       new Button(450, 280, 300, 60, 'ℹ️ Instrucciones', () => this.showInstructions()),
       new Button(450, 360, 300, 60, '🖼️ Galería', () => this.showGallery())
     ];
@@ -394,54 +439,57 @@ this.ctx.textBaseline = 'middle';
     this.render();
   }
 
-  async showGallery() {
-  this.currentScreen = 'gallery';
-  this.buttons = [
-    new Button(450, 520, 300, 50, '↩️ Volver', () => this.showMenu(), {
-      fillColor: '#f0f0f0',
-      textColor: '#333'
-    })
-  ];
+  async showGallery() { //mostrar la pantalla de galería de imágenes dentro del juego.
+    this.currentScreen = 'gallery';
+    this.buttons = [
+      new Button(450, 520, 300, 50, '↩️ Volver', () => this.showMenu(), {
+        fillColor: '#f0f0f0',
+        textColor: '#333'
+      })
+    ];
 
-  // 🔹 Precargar las miniaturas solo la primera vez
-  if (this.galleryThumbnails.length === 0) {
-    this.galleryThumbnails = await Promise.all(
-      this.images.map(src => this.loadThumbnail(src, 150))
-    );
+    // 🔹 Precargar las miniaturas solo la primera vez
+    // Solo carga las imágenes la primera vez que se entra a la galería.
+// Así evita descargar o procesar las mismas imágenes cada vez que el jugador vuelve a esta pantalla.
+    if (this.galleryThumbnails.length === 0) {
+      this.galleryThumbnails = await Promise.all(
+        this.images.map(src => this.loadThumbnail(src, 150)) //.map(...) aplica la función loadThumbnail a cada imagen (que carga la imagen y la devuelve como objeto Image
+      );
+    }
+
+    this.render(); //redibuja el canvas mostrando la galería y el botón “Volver”.
   }
-
-  this.render();
-}
 
 
   async startLevel(level) {
-    this.currentLevel = level;
+    this.currentLevel = level; // guarda qué nivel visual (1, 2 o 3) eligió el jugador.
     this.moves = 0;
     this.timer = 0;
     this.helpUsed = false;
 
-    // 🔹 Definir cantidad de filas y columnas según nivel
+    // 🔹 Definir cantidad de filas y columnas según la dificultad
     if (this.dificultad === 1) {
-        this.cols = 2;
-        this.rows = 2; // 4 piezas
+      this.cols = 2;
+      this.rows = 2; // 4 piezas
     } else if (this.dificultad === 2) {
-        this.cols = 3;
-        this.rows = 2; // 6 piezas
+      this.cols = 3;
+      this.rows = 2; // 6 piezas
     } else if (this.dificultad === 3) {
-        this.cols = 4;
-        this.rows = 2; // 8 piezas
+      this.cols = 4;
+      this.rows = 2; // 8 piezas
     }
+    // Esto determina el tamaño y cantidad de bloques a mostrar.
 
     // Selección random de imagen
     const randomIndex = Math.floor(Math.random() * this.images.length);
-    await this.loadImage(this.images[randomIndex]);
+    await this.loadImage(this.images[randomIndex]); //para cargarla completamente antes de continuar.
 
     // Guardamos la imagen en preview
-    this.previewImage = this.currentImage;
+    this.previewImage = this.currentImage; //Se guarda la imagen seleccionada para usarla luego en la pantalla de previsualización (“Imagen a resolver”).
     this.selectedImageIndex = randomIndex;
 
     // Crear thumbnails
-    this.previewThumbnails = await Promise.all(this.images.map(src => this.loadThumbnail(src, 100)));
+    this.previewThumbnails = await Promise.all(this.images.map(src => this.loadThumbnail(src, 100))); //Carga todas las imágenes como miniaturas para mostrarlas en la seleccion
 
     // Cambiamos pantalla y reiniciamos animación
     this.currentScreen = 'preview';
@@ -454,16 +502,17 @@ this.ctx.textBaseline = 'middle';
     // Elegir imagen final después de tiempo aleatorio
     const randomTime = 1000 + Math.random() * 4000; // 1000 a 5000 ms
     setTimeout(() => {
-      this.previewAnimationDone = true;
-      this.createPreviewButtons();
+      this.previewAnimationDone = true; //se detiene la animación.
+      this.createPreviewButtons(); //agrega el boton Comenzar
       this.render();
     }, randomTime);
   }
-  beginGame() {
+
+  beginGame() { //inicia realmente la partida después de la pantalla de previsualización
     this.currentScreen = 'game';
-    this.currentImage = this.previewImage;
-    this.createPieces();
-    this.createGameButtons();
+    this.currentImage = this.previewImage; //Copia la imagen que se había elegido durante la animación previa (previewImage) para usarla como imagen base del puzzle.
+    this.createPieces(); //dividir la imagen en piezas, Cada pieza se almacena como un objeto (por ejemplo, instancias de BlockaPiece), con su posición, rotación aleatoria y coordenadas dentro de la imagen original.
+    this.createGameButtons(); //configura los botones específicos de la pantalla de juego (Ayuda, Menú).
     this.startTimer();
     this.render();
   }
@@ -474,16 +523,16 @@ this.ctx.textBaseline = 'middle';
       img.crossOrigin = 'anonymous';
       img.onload = () => {
         this.currentImage = img;
-        this.createPieces();
+        this.createPieces(); //método que corta la imagen en bloques (instancias de BlockaPiece)
         resolve();
       };
       img.src = src;
     });
   }
 
- createPieces() {
+  createPieces() {
     // 🔹 Limpia el array de piezas
-    this.pieces = [];
+    this.pieces = []; //Así, si el jugador reinicia o cambia de nivel, no se mezclan las piezas viejas con las nuevas.
 
     // 🔹 Usa el lado más grande (entre columnas y filas)
     const mayorDimension = Math.max(this.rows, this.cols);
@@ -510,37 +559,37 @@ this.ctx.textBaseline = 'middle';
     let offsetY = 0;
 
     if (relacionImagen < relacionTablero) {
-        // Imagen más "vertical" → recortamos arriba/abajo
-        altoImagenUsada = this.currentImage.width / relacionTablero;
-        offsetY = (this.currentImage.height - altoImagenUsada) / 2;
+      // Imagen más "vertical" → recortamos arriba/abajo
+      altoImagenUsada = this.currentImage.width / relacionTablero;
+      offsetY = (this.currentImage.height - altoImagenUsada) / 2;
     } else if (relacionImagen > relacionTablero) {
-        // Imagen más "horizontal" → recortamos izquierda/derecha
-        anchoImagenUsada = this.currentImage.height * relacionTablero;
-        offsetX = (this.currentImage.width - anchoImagenUsada) / 2;
+      // Imagen más "horizontal" → recortamos izquierda/derecha
+      anchoImagenUsada = this.currentImage.height * relacionTablero;
+      offsetX = (this.currentImage.width - anchoImagenUsada) / 2;
     }
 
-    // 🔹 Dimensiones del recorte de origen (imagen)
-    const anchoOrigen = anchoImagenUsada / this.cols;
+    // 🔹 Dimensiones del recorte de origen (imagen) tamaño de cada pedazo de la imagen original (zona que se recorta).
+    const anchoOrigen = anchoImagenUsada / this.cols; 
     const altoOrigen = altoImagenUsada / this.rows;
 
     // 🔹 Dimensiones de destino (canvas)
-    const tamañoDestino = tamañoPiezaBase;
+    const tamañoDestino = tamañoPiezaBase; // tamaño de cada pieza dentro del canvas.
 
     // 🔹 Crear cada pieza
     for (let row = 0; row < this.rows; row++) {
-        for (let col = 0; col < this.cols; col++) {
-            const pieza = new BlockaPiece(
-                col * tamañoDestino,       // X destino (en canvas)
-                row * tamañoDestino,       // Y destino (en canvas)
-                tamañoDestino,             // tamaño de pieza cuadrada
-                offsetX + col * anchoOrigen, // X origen (imagen)
-                offsetY + row * altoOrigen   // Y origen (imagen)
-            );
+      for (let col = 0; col < this.cols; col++) {
+        const pieza = new BlockaPiece(
+          col * tamañoDestino,       // pos X (en canvas)
+          row * tamañoDestino,       // pos Y  (en canvas)
+          tamañoDestino,             //  ancho/alto de la pieza
+          offsetX + col * anchoOrigen, // punto de recorte X de la imagen
+          offsetY + row * altoOrigen   // punto de recorte Y de la imagen
+        );
 
-            this.pieces.push(pieza);
-        }
+        this.pieces.push(pieza);
+      }
     }
-}
+  }
 
   checkVictory() {
     return this.pieces.every(p => p.isCorrect());
@@ -554,22 +603,24 @@ this.ctx.textBaseline = 'middle';
   }
 
   useHelp() {
-    if (this.helpUsed) return;
+    if (this.helpUsed) return; //Evita que el jugador use la ayuda más de una vez por partida.
 
-    const incorrect = this.pieces.filter(p => !p.isCorrect() && !p.isFixed);
-    if (incorrect.length === 0) return;
+    const incorrect = this.pieces.filter(p => !p.isCorrect() && !p.isFixed); //filtra las piezas que no están en la rotación correcta y que no están fijas (isFixed = false).
+    if (incorrect.length === 0) return; //Si todas las piezas ya están correctas, no hace nada.
 
-    const piece = incorrect[Math.floor(Math.random() * incorrect.length)];
-    piece.rotation = piece.correctRotation;
-    piece.isFixed = true;
+    const piece = incorrect[Math.floor(Math.random() * incorrect.length)]; // Elige una pieza al azar de las incorrectas.
+    piece.rotation = piece.correctRotation; //la pone en la rotacion correcta
+    piece.isFixed = true; //y le cambia el isFixed a true
 
     this.timer += 5;
-    this.helpUsed = true;
+    this.helpUsed = true; //Marca que la ayuda ya fue utilizada
     this.render();
 
     if (this.checkVictory()) {
       this.handleVictory();
     }
+    //Después de usar la ayuda, si esa pieza corregida hace que todas las piezas estén correctas,
+    // entonces el jugador gana el nivel, y se llama a handleVictory().
   }
 
   startTimer() {
@@ -610,34 +661,35 @@ this.ctx.textBaseline = 'middle';
     }
   }
 
-  render() {
+  render() { //Dibuja la pantalla según el valor de this.currentScreen:
     this.ctx.fillStyle = '#ffffff';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
+    // Cada pantalla tiene su propio método renderX(), que pinta los textos, imágenes y botones correspondientes.
     switch (this.currentScreen) {
       case 'menu':
-        this.renderMenu();
+        this.renderMenu(); //título y botones del menú principal.
         break;
       case 'instructions':
-        this.renderInstructions();
+        this.renderInstructions(); //muestra texto explicativo del juego.
         break;
       case 'levelSelect':
-        this.renderLevelSelect();
+        this.renderLevelSelect(); //permite elegir nivel y dificultad.
         break;
       case 'preview':
-        this.renderPreview();
+        this.renderPreview(); //muestra animación y la imagen a resolver.
         break;
       case 'game':
-        this.renderGame();
+        this.renderGame(); //renderiza las piezas, el temporizador y los botones de juego.
         break;
       case 'victory':
-        this.renderVictory();
+        this.renderVictory(); //pantalla de ganar 
         break;
       case 'defeat':
-        this.renderDefeat();
+        this.renderDefeat(); // pantalla de perder.
         break;
       case 'gallery':
-        this.renderGallery();
+        this.renderGallery(); //muestra todas las imágenes del juego.
         break;
     }
 
@@ -649,7 +701,7 @@ this.ctx.textBaseline = 'middle';
     this.ctx.font = 'bold 48px "Segoe UI"';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'top';
-  this.ctx.fillText('🎮 BLOCKA', 600, 80);
+    this.ctx.fillText('🎮 BLOCKA', 600, 80);
 
     this.ctx.font = '24px "Segoe UI"';
     this.ctx.fillStyle = '#666';
@@ -673,14 +725,14 @@ this.ctx.textBaseline = 'middle';
       '• 🖱️ Click Derecho: Rotar horario',
       '',
       '🎚️ NIVELES:',
-      '• 🩶 Nivel 1: Escala de grises',
+      '• ⭐ Nivel 1: Escala de grises',
       '• 🌙 Nivel 2: Bajo brillo',
       '• 🎨 Nivel 3: Colores invertidos',
       '',
       '⭐ CARACTERÍSTICAS:',
       '• ⏱️ Temporizador para medir tu tiempo',
       '• 🆘 Botón de ayuda (+5 segundos)',
-      '• 🔢 Elige dificultad: 4, 6 o 16 piezas'
+      '• 🔢 Elige dificultad: 4, 6 u 8 piezas'
     ];
 
     instructions.forEach((line, i) => {
@@ -712,12 +764,12 @@ this.ctx.textBaseline = 'middle';
     this.ctx.fillText(`🔄 Movimientos: ${this.moves}`, infoX, infoStartY + 100);
 
     // Área del juego a la izquierda
-    const offsetX = 25;
-    const boardHeight = this.rows * (this.gameAreaSize / Math.max(this.rows, this.cols));
-    const offsetY = (this.canvas.height - boardHeight) / 2;
+    const offsetX = 25; //deja un margen a la izquierda
+    const boardHeight = this.rows * (this.gameAreaSize / Math.max(this.rows, this.cols)); //calcula el alto total del tablero
+    const offsetY = (this.canvas.height - boardHeight) / 2; //centra verticalmente el tablero dentro del canvas.
 
-    this.ctx.save();
-    this.ctx.translate(offsetX, offsetY);
+    this.ctx.save(); //Guarda el estado del contexto (save) 
+    this.ctx.translate(offsetX, offsetY); //traslada el origen del dibujo para que todo el tablero quede posicionado correctamente.
 
     this.pieces.forEach(piece => {
       this.ctx.save();
@@ -732,7 +784,9 @@ this.ctx.textBaseline = 'middle';
       //     this.filters[this.currentLevel](this.ctx);
       // }
 
-      // Crear un canvas temporal para la pieza
+      //
+      //Se crea un canvas auxiliar temporal para procesar cada pieza individualmente.
+      // Esto permite aplicar filtros o rotaciones sin alterar el canvas principal.
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
       tempCanvas.width = piece.size;
@@ -758,7 +812,7 @@ this.ctx.textBaseline = 'middle';
 
       this.ctx.restore();
 
-      this.ctx.strokeStyle = piece.isFixed ? '#4CAF50' : '#ddd';
+      this.ctx.strokeStyle = piece.isFixed ? '#4CAF50' : '#ddd'; //Dibuja un borde verde grueso si la pieza está fija (correcta), o gris fino si no.
       this.ctx.lineWidth = piece.isFixed ? 4 : 2;
       this.ctx.strokeRect(piece.x, piece.y, piece.size, piece.size);
     });
@@ -807,29 +861,29 @@ this.ctx.textBaseline = 'middle';
   }
 
   renderGallery() {
-  this.ctx.fillStyle = '#333';
-  this.ctx.font = 'bold 32px "Segoe UI"';
-  this.ctx.textAlign = 'center';
-  this.ctx.fillText('Galería de Imágenes', 600, 60);
+    this.ctx.fillStyle = '#333';
+    this.ctx.font = 'bold 32px "Segoe UI"';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('Galería de Imágenes', 600, 60);
 
-  this.ctx.font = '18px "Segoe UI"';
-  this.ctx.fillStyle = '#666';
-  this.ctx.fillText('Estas son las imágenes que encontrarás en el juego', 600, 100);
+    this.ctx.font = '18px "Segoe UI"';
+    this.ctx.fillStyle = '#666';
+    this.ctx.fillText('Estas son las imágenes que encontrarás en el juego', 600, 100);
 
-  const thumbSize = 150;
-  const padding = 20;
-  const cols = 3;
-  const totalRowWidth = cols * thumbSize + (cols - 1) * padding;
-  const startX = (this.canvas.width - totalRowWidth) / 2;
+    const thumbSize = 150;
+    const padding = 20;
+    const cols = 3;
+    const totalRowWidth = cols * thumbSize + (cols - 1) * padding;
+    const startX = (this.canvas.width - totalRowWidth) / 2;
 
-  // 🔹 Usar las imágenes precargadas
-  this.galleryThumbnails.forEach((img, i) => {
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = startX + col * (thumbSize + padding);
-    const y = 150 + row * (thumbSize + padding);
-    this.ctx.drawImage(img, x, y, thumbSize, thumbSize);
-  });
-}
+    // 🔹 Usar las imágenes precargadas
+    this.galleryThumbnails.forEach((img, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = startX + col * (thumbSize + padding);
+      const y = 150 + row * (thumbSize + padding);
+      this.ctx.drawImage(img, x, y, thumbSize, thumbSize);
+    });
+  }
 }
 const game = new Game();
