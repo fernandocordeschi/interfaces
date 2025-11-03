@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Games</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Loader oculto por defecto -->
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="spinner"></div>
+        <p class="loader-text">Cargando tu experiencia GoodGames...</p>
+        <p id="loader-percentage" class="loader-percentage">0%</p>
+    </div>
+
+    <header class="header">
+        <div class="inicio">
+            <div class="logo-menu-container">
+                <img id="menuToggle" src="images/menuhambur.png" alt="Menú" class="menu-icon">
+
+                <nav class="menu-hamburguesa" id="menu">
+                    <ul>
+                        <hr>
+                        <li><a href="home.html"><img src="images/home-icon.png" alt="">Inicio</a></li>
+                        <li><a href="#juegos-destacados"><img src="images/destacados-icon.png" alt="">Juegos Destacados</a></li>
+                        <li><a href="#juegos-recientes"><img src="images/recientes-icon.png" alt="">Juegos Recientes</a></li>
+                        <hr>
+                        <span class="menu-categorias">Categorías</span>
+                        <li><a href="#juegos-accion"><img src="images/accion-icon.png" alt="">Acción</a></li>
+                        <li><a href="home.html"><img src="images/arcade-icon.png" alt="">Arcade</a></li>
+                        <li><a href="#juegos-deporte"><img src="images/deporte-icon.png" alt="">Deportes</a></li>
+                        <li><a href="home.html"><img src="images/multijugador-icon.png" alt="">Multijugador</a></li>
+                        <li><a href="home.html"><img src="images/mas-icon.png" alt="">Más...</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div>
+                <a href="home.html"><img class="imagenLogo" src="images/logo.png" alt="Mi marca"></a>
+            </div>
+        </div>
+        </div>
+        <div class="buscador">
+            <img src="images/search-icon.png" alt="" class="icon">
+            <input type="search" id="q" name="q" placeholder="Buscar..." />
+        </div>
+        <div class="botones-derecha">
+            <div class="btn-premium">
+                <button class="btn-premium-mobile"> <img src="images/corona-icon.png" alt=""></button>
+                <button class="btn-premium-desktop">¡Hazte usuario Premium!</button>
+            </div>
+            <div class="user">
+                <button class="user-button" id="user-menu">
+                    <span class="arrowUser">▼</span>
+                    <img class="user-photo" src="images/user.png" alt="Usuario">
+                </button>
+                <div class="menu-user">
+                    <span class="user-name">Lionel Messi</span>
+                    <a href="home.html">
+                        <div class="link-content">
+                            <img src="images/perfil-icon.png" alt="">
+                            <span>Mi perfil</span>
+                        </div>
+                    </a>
+                    <a href="home.html">
+                        <div class="link-content">
+                            <img src="images/misjuegos-icon.png" alt="">
+                            <span>Mis Juegos</span>
+                        </div>
+                    </a>
+                    <a href="home.html">
+                        <div class="link-content">
+                            <img src="images/config-icon.png" alt="">
+                            <span>Configuración</span>
+                        </div>
+                    </a>
+                    <a href="home.html">
+                        <div class="link-content">
+                            <img src="images/ayuda.icon.png" alt="">
+                            <span>Ayuda</span>
+                        </div>
+                    </a>
+                    <div class="logout-section">
+                        <button type="button" class="btn-logout">Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <h2 class="tituloPrincipal" id="juegos-destacados">Juegos Destacados</h2>
+
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div class="card active">
+                <img src="images/blocka.jpg" alt="blocka" id="peg-carrou">
+            </div>
+            <div class="card next">
+                <img src="images/bombit3.jpg" alt="bombit3">
+            </div>
+           <div class="card prev">
+                <img src="images/pegsolitarie.png" alt="peg">
+            </div>
+            
+        </div>
+
+        <div class="arrow left" onclick="moveSlide(-1)"><img src="images/arrow-left.png"></div>
+        <div class="arrow right" onclick="moveSlide(1)"><img src="images/arrow-right.png"></div>
+    </div>
+    <!-- Botón jugar fuera del carrusel -->
+    <button class="play-btn" aria-label="Jugar"><span class="play-text">Jugar</span></button>
+
+    <!-- Carruseles por categoría -->
+    <div class="categorias-container">
+        <div class="categoria-carrousel">
+            <h3 class="categoria-titulo" id="juegos-recientes">Juegos Recientes</h3>
+            <div class="categoria-juegos">
+                <div class="categoria-card prev"><img src="images/ludoking.png"><span class="game-name"><p>Ludo King</p></span></div>
+                <div class="categoria-card"><img src="images/golfrival.png"><span class="game-name"><p>Golf Rival</p></span></div>
+                <div class="categoria-card"><img src="images/pubg.jpg"><span class="game-name"><p>Player Underground Battlegrounds</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/supermario.jpg"><span class="game-name"><p>Super Mario</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/subway.png"><span class="game-name"><p>Subway Surfers</p></span></div>
+                <div class="categoria-card prev"><img src="images/slitherio.png"><span class="game-name"><p>Slither.io</p></span></div>
+            </div>
+            <div class="arrow left"><img src="images/arrow-left.png"></div>
+            <div class="arrow right"><img src="images/arrow-right.png"></div>
+        </div>
+    </div>
+
+    <div class="categorias-container">
+        <div class="categoria-carrousel" id="juegos-accion">
+            <h3 class="categoria-titulo">Juegos de Acción</h3>
+            <div class="categoria-juegos">
+                <div class="categoria-card prev"><img src="images/woth.jpg"><span class="game-name"><p>Way of the Hunter</p></span></div>
+                <div class="categoria-card"><img src="images/street-fighter.jpg"><span class="game-name"><p>Street Fighter</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/pubg.jpg"><span class="game-name"><p>Player Underground Battlegrounds</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/codmw3.jpg"><span class="game-name"><p>Call Of Duty: Modern Warfare III</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/modern-strike.jpg"><span class="game-name"><p>Modern Strike</p></span></div>
+                <div class="categoria-card prev"><img src="images/stick-fight.jpg"><span class="game-name"><p>Stick Fight</p></span></div>
+            </div>
+            <div class="arrow left"><img src="images/arrow-left.png"></div>
+            <div class="arrow right"><img src="images/arrow-right.png"></div>
+        </div>
+    </div>
+
+    <div class="categorias-container">
+        <div class="categoria-carrousel" id="juegos-deporte">
+            <h3 class="categoria-titulo">Juegos de Deporte</h3>
+            <div class="categoria-juegos">
+                <div class="categoria-card prev"><img src="images/archery-wt.png"><span class="game-name"><p>Archery World Tour</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/golfrival.png"><span class="game-name"><p>Golf Rival</p></span></div>
+                <div class="categoria-card"><img src="images/bola.jpg"><span class="game-name"><p>Bola</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/tennis-mania.jpg"><span class="game-name"><p>Tennis Mania</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/penaltyshooter.png"><span class="game-name"><p>Penalty Shooters 3</p></span></div>
+                <div class="categoria-card prev"><img src="images/basketball-legends-2020.jpg"><span class="game-name"><p>Basketball Legends 2020</p></div>
+            </div>
+            <div class="arrow left"><img src="images/arrow-left.png"></div>
+            <div class="arrow right"><img src="images/arrow-right.png"></div>
+        </div>
+    </div>
+
+    <div class="categorias-container">
+        <div class="categoria-carrousel">
+            <h3 class="categoria-titulo" id="juegos-gratis">Juegos Gratis</h3>
+            <div class="categoria-juegos">
+                <div class="categoria-card prev"><img src="images/ludoking.png"><span class="game-name"><p>Ludo King</p></span></div>
+                <div class="categoria-card prev"><img src="images/woth.jpg"><span class="game-name"><p>Way of the Hunter</p></span></div>
+                <div class="categoria-card"><img src="images/bombit3.jpg"><span class="game-name"><p>Bomb It 3</p></span></div>
+                <div class="categoria-card"><img src="images/supermarketogether.png"><span class="game-name"><p>Supermarket Together</p></span></div>
+                <div class="categoria-card prev"><img src="images/basketball-legends-2020.jpg"><span class="game-name"><p>Basketball Legends 2020</p></div>
+                <div class="categoria-card prev"><img src="images/slitherio.png"><span class="game-name"><p>Slither.io</p></span></div>
+            </div>
+            <div class="arrow left"><img src="images/arrow-left.png"></div>
+            <div class="arrow right"><img src="images/arrow-right.png"></div>
+        </div>
+    </div>
+
+    <div class="categorias-container">
+        <div class="categoria-carrousel">
+            <h3 class="categoria-titulo" id="juegos-premium">Juegos Premium</h3>
+            <div class="categoria-juegos">
+                <div class="categoria-card prev"><img src="images/archery-wt.png"><span class="game-name"><p>Archery World Tour</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/street-fighter.jpg"><span class="game-name"><p>Street Fighter</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/bola.jpg"><span class="game-name"><p>Bola</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/supermario.jpg"><span class="game-name"><p>Super Mario</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/tennis-mania.jpg"><span class="game-name"><p>Tennis Mania</p></span><span class="premium-label">Premium</span></div>
+                <div class="categoria-card"><img src="images/codmw3.jpg"><span class="game-name"><p>Call Of Duty: Modern Warfare III</p></span><span class="premium-label">Premium</span></div>
+            </div>
+            <div class="arrow left"><img src="images/arrow-left.png"></div>
+            <div class="arrow right"><img src="images/arrow-right.png"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <a href="#">
+                    <img src="images/logo.png" alt="GoodGames Logo" />
+                </a>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/instagram-icon.png" alt="Instagram"></a>
+                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/twitter-icon.png" alt="Twitter"></a>
+                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/facebook-icon.png" alt="Facebook"></a>
+                    <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer"><img
+                            src="images/youtube-icon.png" alt="YouTube"></a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+
+                <div class="links">
+                    <div class="title-icon">
+                        <img src="images/links-icon.png" class="footer-icon">
+                        <h3>Links</h3>
+                    </div>
+                    <ul>
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="#">Categorías</a></li>
+                        <li><a href="#">Términos y condiciones</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="nosotros">
+                    <div class="title-icon">
+                        <img src="images/icon2.png" class="footer-icon">
+                        <h3>Nosotros</h3>
+                    </div>
+                    <ul>
+                        <li><a href="#">Quienes somos</a></li>
+                        <li><a href="#">Preguntas Frecuentes</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+
+                <div class="ayuda">
+                    <div class="title-icon">
+                        <img src="images/ayuda-icon.png" class="footer-icon">
+                        <h3>Ayuda</h3>
+                    </div>
+                    <ul>
+                        <li><a href="#">Guía de juego</a></li>
+                        <li><a href="#">Soporte técnico</a></li>
+                        <li><a href="#">Tutoriales</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="footer-copy">
+            <p>Copyright © 2025 GAMES Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
