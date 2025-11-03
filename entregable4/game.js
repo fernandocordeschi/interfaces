@@ -57,31 +57,31 @@ class Button {
     }
 
     draw(ctx) {
-        // Sombra
+              // Sombra
         if (this.isHovered) {
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = 'rgba(102, 126, 234, 0.8)';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'rgba(255, 165, 0, 0.6)';
         } else {
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = 'rgba(102, 126, 234, 0.4)';
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = 'rgba(255, 165, 0, 0.3)';
         }
 
-        // Fondo del botón
+        // Fondo del botón estilo Los Simpson (amarillo a naranja)
         const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
-        gradient.addColorStop(0, '#667eea');
-        gradient.addColorStop(1, '#764ba2');
+        gradient.addColorStop(0, '#FDD017');
+        gradient.addColorStop(1, '#FF8C00');
         ctx.fillStyle = gradient;
         ctx.fillRect(this.x, this.y, this.width, this.height);
 
-        // Borde
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.lineWidth = 2;
+        // Borde negro
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 3;
         ctx.strokeRect(this.x, this.y, this.width, this.height);
 
         ctx.shadowBlur = 0;
 
         // Texto
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#000000';
         ctx.font = 'bold 16px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -257,18 +257,26 @@ class PegSolitaire {
     }
 
     drawTitle() {
-        // Título
-        this.ctx.shadowBlur = 20;
-        this.ctx.shadowColor = '#00ffff';
-        this.ctx.fillStyle = '#00ffff';
+        // Título estilo Los Simpson
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = '#FFD700';
+        this.ctx.fillStyle = '#FFD90F';
         this.ctx.font = 'bold 48px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('PEG SOLITAIRE Homer vs Bart – La Batalla del Sofá', this.canvas.width / 2, 60);
+        this.ctx.strokeStyle = '#000000';
+        this.ctx.lineWidth = 4;
+        this.ctx.strokeText('PEG SOLITAIRE: Homer vs Bart', this.canvas.width / 2, 60);
+        this.ctx.fillText('PEG SOLITAIRE: Homer vs Bart', this.canvas.width / 2, 60);
         this.ctx.shadowBlur = 0;
+        
+        // Subtítulo
+        this.ctx.fillStyle = '#FFA500';
+        this.ctx.font = 'italic 24px Arial';
+        this.ctx.fillText('La Batalla del Sofá', this.canvas.width / 2, 95);
     }
 
     drawStats() {
-        const statsY = 120;
+        const statsY = 130;
         const centerX = this.canvas.width / 2;
         
         // Panel de estadísticas
@@ -379,10 +387,11 @@ class PegSolitaire {
         }
         
         if (this.selectedPeg) {
-            this.drawValidMoves();
             
             if (this.showHints) {
                 this.drawHintArrows();
+                this.drawValidMoves();
+
             }
         }
         
