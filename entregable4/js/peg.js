@@ -1,3 +1,5 @@
+//para peg.html
+
 // Clase para manejar los tipos de planetas
 class PlanetType {
     constructor(colors, glow, name, imagePath) {
@@ -167,15 +169,21 @@ class PegSolitaire {
         this.moveCount = 0;
         this.showHints = false;
         this.showHelp = false;
+        this.showMenuHelp = false;
         this.showModal = false;
         this.modalTitle = '';
         this.modalMessage = '';
         this.hintAnimation = 0;
         this.stars = this.generateStars(150);
+
+        this.inStartScreen = true;
+        this.startButtons = [];
+
         
         // Botones
         this.buttons = [];
         this.createButtons();
+        this.createStartButtons();
         
         // Timer
         this.timer = new GameTimer(
@@ -183,7 +191,16 @@ class PegSolitaire {
             (timeLeft) => {},
             () => this.handleTimeExpired()
         );
-        
+
+        this.menuButton = new Button(20, 20, 120, 45, '🏠 Menú', () => {
+        this.inStartScreen = true;
+        this.showModal = false;
+        this.showHelp = false;
+        this.isDragging = false;
+        this.selectedPeg = null;
+        this.validMoves = [];
+        this.timer.stop();
+    });
         this.initBoard();
         this.setupEventListeners();
         this.animate();
@@ -402,6 +419,7 @@ class PegSolitaire {
 
         // Dibujar botones
         this.buttons.forEach(button => button.draw(this.ctx));
+        this.menuButton.draw(this.ctx);
         
         // Dibujar leyenda
         this.drawLegend();
@@ -424,7 +442,7 @@ class PegSolitaire {
 
         // Panel de ayuda más compacto
         const panelWidth = 600;
-        const panelHeight = 550;
+        const panelHeight = 470;
         const panelX = (this.canvas.width - panelWidth) / 2;
         const panelY = 120;
 
@@ -486,8 +504,77 @@ class PegSolitaire {
         this.ctx.fillStyle = '#00ffff';
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 25);
+        this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 8);
     }
+
+    drawMenuHelpScreen() {
+    // Fondo semi-transparente
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Panel
+    const panelWidth = 600;
+    const panelHeight = 550;
+    const panelX = (this.canvas.width - panelWidth) / 2;
+    const panelY = 25;
+
+    this.ctx.fillStyle = 'rgba(26, 26, 62, 0.95)';
+    this.ctx.strokeStyle = '#00ffff';
+    this.ctx.lineWidth = 3;
+    this.ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+    this.ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
+
+    // Título
+    this.ctx.fillStyle = '#00ffff';
+    this.ctx.font = 'bold 28px Arial';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('📖 CÓMO JUGAR', this.canvas.width / 2, panelY + 45);
+
+    // Contenido (puedes reutilizar el arreglo de texto)
+    const helpText = [
+        '🎯 OBJETIVO',
+        'Eliminar todas las piezas excepto una en el centro.',
+        '',
+        '🎮 REGLAS',
+        '• Clic en un planeta para seleccionarlo',
+        '• Arrastra sobre otra pieza hacia un espacio vacío',
+        '• La pieza saltada se elimina',
+        '• Solo movimientos horizontales/verticales',
+        '',
+        '💡 AYUDAS',
+        '• Flechas doradas: movimientos posibles',
+        '• Círculos verdes: destinos válidos',
+        '',
+        '⏱️ TIEMPO',
+        'Tienes 5 minutos para completar',
+        '',
+        '🏆 FIN DEL JUEGO',
+        '• Victoria: Solo queda 1 pieza',
+        '• Derrota: Sin movimientos válidos o tiempo agotado'
+    ];
+
+    const lineHeight = 20;
+    const leftMargin = panelX + 300;
+    let textY = panelY + 85;
+
+    helpText.forEach((line, index) => {
+        if (line.includes('OBJETIVO') || line.includes('REGLAS') || line.includes('AYUDAS') || 
+            line.includes('TIEMPO') || line.includes('FIN')) {
+            this.ctx.fillStyle = '#9d7dff';
+            this.ctx.font = 'bold 16px Arial';
+        } else {
+            this.ctx.fillStyle = 'white';
+            this.ctx.font = '14px Arial';
+        }
+        this.ctx.fillText(line, leftMargin, textY + index * lineHeight);
+    });
+
+    // Botón para cerrar (clic en cualquier lugar)
+    this.ctx.fillStyle = '#00ffff';
+    this.ctx.font = '14px Arial';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 25);
+}
 
     drawModal() {
         // Fondo semi-transparente
@@ -815,112 +902,206 @@ class PegSolitaire {
         this.showHelp = !this.showHelp;
     }
 
+    
+    
     setupEventListeners() {
-        // Mouse move para hover de botones
-        this.canvas.addEventListener('mousemove', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
 
-            // Verificar hover en botones principales
-            this.buttons.forEach(button => {
-                button.isHovered = button.isPointInside(x, y);
-            });
+    // --- Mouse move (hover + drag) ---
+    this.canvas.addEventListener('mousemove', (e) => {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-            // Verificar hover en botones del modal
-            if (this.showModal) {
-                this.playAgainButton.isHovered = this.playAgainButton.isPointInside(x, y);
-                this.closeModalButton.isHovered = this.closeModalButton.isPointInside(x, y);
-            }
+        // Si estamos en la pantalla de inicio
+        if (this.inStartScreen) {
+            this.startButtons.forEach(btn => btn.isHovered = btn.isPointInside(x, y));
+            this.canvas.style.cursor = this.startButtons.some(b => b.isHovered) ? 'pointer' : 'default';
+            return;
+        }
 
-            // Drag and drop
-            if (this.isDragging && this.selectedPeg) {
-                this.dragPosition.x = x;
-                this.dragPosition.y = y;
-            }
-
-            // Cambiar cursor
-            const isOverButton = this.buttons.some(b => b.isHovered) || 
-                               (this.showModal && (this.playAgainButton.isHovered || this.closeModalButton.isHovered));
-            this.canvas.style.cursor = isOverButton ? 'pointer' : 'default';
+        // Hover de botones principales
+        this.buttons.forEach(button => {
+            button.isHovered = button.isPointInside(x, y);
         });
 
-        // Mouse down
-        this.canvas.addEventListener('mousedown', (e) => {
+        // Hover del botón de menú
+        this.menuButton.isHovered = this.menuButton.isPointInside(x, y);
+
+        // Hover de botones del modal
+        if (this.showModal) {
+            this.playAgainButton.isHovered = this.playAgainButton.isPointInside(x, y);
+            this.closeModalButton.isHovered = this.closeModalButton.isPointInside(x, y);
+        }
+
+        // Drag and drop
+        if (this.isDragging && this.selectedPeg) {
+            this.dragPosition.x = x;
+            this.dragPosition.y = y;
+        }
+
+        // Cambiar cursor si pasa sobre un botón
+        const isOverButton =
+        this.buttons.some(b => b.isHovered) ||
+        this.menuButton.isHovered ||
+        (this.showModal && (this.playAgainButton.isHovered || this.closeModalButton.isHovered));
+        this.canvas.style.cursor = isOverButton ? 'pointer' : 'default';
+    });
+
+    // --- Mouse down (clic) ---
+    this.canvas.addEventListener('mousedown', (e) => {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (this.inStartScreen && this.showMenuHelp) {
+    this.showMenuHelp = false; // cerrar panel de ayuda en menú
+    return;
+}
+
+        // Si estamos en la pantalla inicial
+        if (this.inStartScreen) {
+            for (const b of this.startButtons) {
+                if (b.isPointInside(x, y)) {
+                    b.click();
+                    return;
+                }
+            }
+            return;
+        }
+
+        
+
+        // Cerrar ayuda si está abierta
+        if (this.showHelp) {
+            this.showHelp = false;
+            return;
+        }
+
+
+        // Botones del modal
+        if (this.showModal) {
+            if (this.playAgainButton.isPointInside(x, y)) {
+                this.playAgainButton.click();
+                return;
+            }
+            if (this.closeModalButton.isPointInside(x, y)) {
+                this.closeModalButton.click();
+                return;
+            }
+            return;
+        }
+
+        // Botones principales
+        for (let button of this.buttons) {
+            if (button.isPointInside(x, y)) {
+                button.click();
+                return;
+            }
+        }
+
+        // Botón de menú
+        if (this.menuButton.isPointInside(x, y)) {
+            this.menuButton.click();
+            return;
+        }
+
+        // Seleccionar ficha (inicio de drag)
+        const pos = this.getBoardPosition(x, y);
+        if (pos && this.board[pos.row][pos.col] > 0) {
+            this.selectedPeg = pos;
+            this.validMoves = this.getValidMoves(pos.row, pos.col);
+            this.isDragging = true;
+            this.dragPosition = { x, y };
+        }
+    });
+
+    // --- Mouse up (soltar drag) ---
+    this.canvas.addEventListener('mouseup', (e) => {
+        if (this.isDragging && this.selectedPeg) {
             const rect = this.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-
-            // Cerrar ayuda si está abierta
-            if (this.showHelp) {
-                this.showHelp = false;
-                return;
-            }
-
-            // Verificar clic en botones del modal
-            if (this.showModal) {
-                if (this.playAgainButton.isPointInside(x, y)) {
-                    this.playAgainButton.click();
-                    return;
-                }
-                if (this.closeModalButton.isPointInside(x, y)) {
-                    this.closeModalButton.click();
-                    return;
-                }
-                return;
-            }
-
-            // Verificar clic en botones principales
-            for (let button of this.buttons) {
-                if (button.isPointInside(x, y)) {
-                    button.click();
-                    return;
-                }
-            }
-
-            // Seleccionar pieza del tablero
             const pos = this.getBoardPosition(x, y);
-            if (pos && this.board[pos.row][pos.col] > 0) {
-                this.selectedPeg = pos;
-                this.validMoves = this.getValidMoves(pos.row, pos.col);
-                this.isDragging = true;
-                this.dragPosition = { x, y };
-            }
-        });
 
-        // Mouse up
-        this.canvas.addEventListener('mouseup', (e) => {
-            if (this.isDragging && this.selectedPeg) {
-                const rect = this.canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const pos = this.getBoardPosition(x, y);
-                
-                if (pos) {
-                    this.makeMove(this.selectedPeg, pos);
-                }
-                
-                this.selectedPeg = null;
-                this.isDragging = false;
-                this.validMoves = [];
-            }
-        });
+            if (pos) this.makeMove(this.selectedPeg, pos);
 
-        // Mouse leave
-        this.canvas.addEventListener('mouseleave', () => {
-            if (this.isDragging) {
-                this.isDragging = false;
-                this.selectedPeg = null;
-                this.validMoves = [];
-            }
-        });
-    }
+            this.selectedPeg = null;
+            this.isDragging = false;
+            this.validMoves = [];
+        }
+    });
+
+    // --- Mouse leave (salida del canvas) ---
+    this.canvas.addEventListener('mouseleave', () => {
+        if (this.isDragging) {
+            this.isDragging = false;
+            this.selectedPeg = null;
+            this.validMoves = [];
+        }
+    });
+}
 
     animate() {
-        this.hintAnimation++;
+    requestAnimationFrame(() => this.animate());
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.hintAnimation++;
+
+    if (this.inStartScreen) {
+        this.drawStartScreen();
+    } else {
         this.drawBoard();
-        requestAnimationFrame(() => this.animate());
     }
+}
+
+    drawStartScreen() {
+    this.drawBackground();
+
+    // Título
+    this.ctx.shadowBlur = 20;
+    this.ctx.shadowColor = '#FFD700';
+    this.ctx.fillStyle = '#FFD90F';
+    this.ctx.font = 'bold 60px Arial';
+    this.ctx.textAlign = 'center';
+    this.ctx.strokeStyle = '#000000';
+    this.ctx.lineWidth = 5;
+    this.ctx.strokeText('PEG SOLITAIRE', this.canvas.width / 2, 200);
+    this.ctx.fillText('PEG SOLITAIRE', this.canvas.width / 2, 200);
+
+    this.ctx.font = 'italic 30px Arial';
+    this.ctx.fillStyle = '#FFA500';
+    this.ctx.fillText('Homer vs Bart', this.canvas.width / 2, 250);
+    this.ctx.shadowBlur = 0;
+
+    // Botones de inicio
+    this.startButtons.forEach(b => b.draw(this.ctx));
+
+    // Texto de créditos
+    this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    this.ctx.font = '14px Arial';
+    this.ctx.fillText('© 2025 - Versión Espacial Los Simpson', this.canvas.width / 2, this.canvas.height - 30);
+    if (this.showMenuHelp) {
+    this.drawMenuHelpScreen();
+}
+}
+
+createStartButtons() {
+    const btnWidth = 230;
+    const btnHeight = 55;
+    const btnY = 350;
+    const centerX = this.canvas.width / 2 - btnWidth / 2;
+
+    const startBtn = new Button(centerX, btnY, btnWidth, btnHeight, '🚀 Comenzar', () => {
+        this.inStartScreen = false;
+        this.initBoard();
+        this.timer.start();
+    });
+
+    const helpBtn = new Button(centerX, btnY + 80, btnWidth, btnHeight, '📖 Cómo Jugar', () => {
+        this.showMenuHelp = true; // en lugar de showHelp
+    });
+
+    this.startButtons = [startBtn, helpBtn];
+}
 }
 
 // Inicializar el juego

@@ -1,38 +1,132 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peg Solitaire Espacial</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%);
-            color: white;
-            overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #gameCanvas {
-            border: 3px solid #00ffff;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-            cursor: pointer;
-            background: #0a0e27;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión - GoodGames</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <canvas id="gameCanvas" width="1600" height="900"></canvas>
-    <script src="game.js"></script>
+  <header class="header">
+    <div class="inicio">
+      <div>
+        <a href="index.html"><img class="imagenLogo" src="images/logo.png" alt="Mi marca"></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="registro">
+      <h2 class="titulo-registro">Inicia Sesión</h2>
+      <p class="subtitulo-registro">Inicia sesión para empezar a jugar</p>
+
+      <p class="texto-redes">Ingresa con:</p>
+      <div class="botones-redes">
+        <button type="button" class="btn-small btn-red-social">
+          <img src="images/Icono-Facebook.png" alt="Icono-Facebook" class="icono-red-social">
+          Facebook
+        </button>
+        <button type="button" class="btn-small btn-red-social">
+          <img src="images/Icono-google.png" alt="Icono-google" class="icono-red-social">
+          Google
+        </button>
+      </div>
+
+      <div class="linea-separadora"></div>
+
+      <form class="form-registro-login">
+        <label for="email">Email</label>
+        <div class="input-container">
+          <input type="email" id="email" name="email" class="input-text" required>
+        </div>
+        <label for="password">Contraseña</label>
+        <div class="input-container">
+          <input type="password" id="password" name="password" class="input-text" required>
+        </div>
+        <div class="campo-obligatorio">Campo obligatorio</div>
+        <div class="captcha-fake">
+          <input type="checkbox" id="captcha-login" name="captcha" required>
+          <label for="captcha-login">No soy un robot</label>
+          <img src="images/recaptcha.png" alt="reCAPTCHA" class="img-recaptcha">
+        </div>
+
+        <button type="submit" class="btn-large btn-login btn-registrar" disabled>Iniciar sesión</button>
+      </form>
+
+      <p class="texto-login">¿No tenés cuenta? <a href="singup.html">Registrate</a></p>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <a href="#">
+          <img src="images/logo.png" alt="GoodGames Logo" />
+        </a>
+        <div class="footer-social">
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><img
+              src="images/instagram-icon.png" alt="Instagram"></a>
+          <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"><img src="images/twitter-icon.png"
+              alt="Twitter"></a>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><img
+              src="images/facebook-icon.png" alt="Facebook"></a>
+          <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer"><img src="images/youtube-icon.png"
+              alt="YouTube"></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+
+        <div class="links">
+          <div class="title-icon">
+            <img src="images/links-icon.png" class="footer-icon">
+            <h3>Links</h3>
+          </div>
+          <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#">Categorías</a></li>
+            <li><a href="#">Términos y condiciones</a></li>
+            <li><a href="#">Privacidad</a></li>
+          </ul>
+        </div>
+
+        <div class="nosotros">
+          <div class="title-icon">
+            <img src="images/icon2.png" class="footer-icon">
+            <h3>Nosotros</h3>
+          </div>
+          <ul>
+            <li><a href="#">Quienes somos</a></li>
+            <li><a href="#">Preguntas Frecuentes</a></li>
+            <li><a href="#">Contáctanos</a></li>
+          </ul>
+        </div>
+
+        <div class="ayuda">
+          <div class="title-icon">
+            <img src="images/ayuda-icon.png" class="footer-icon">
+            <h3>Ayuda</h3>
+          </div>
+          <ul>
+            <li><a href="#">Guía de juego</a></li>
+            <li><a href="#">Soporte técnico</a></li>
+            <li><a href="#">Tutoriales</a></li>
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="footer-copy">
+      <p>Copyright © 2025 GAMES Todos los derechos reservados</p>
+    </div>
+  </footer>
+  <script src="js/scripts.js"></script>
+
 </body>
+
 </html>
