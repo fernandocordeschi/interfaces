@@ -153,8 +153,8 @@ class PegSolitaire {
         
         // Tipos de planetas
         this.planetTypes = [
-            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Homero', 'bart.png'),
-            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Bart', 'homero.png'),
+            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Homero', 'images/bart.png'),
+            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Bart', 'images/homero.png'),
         ];
 
         
