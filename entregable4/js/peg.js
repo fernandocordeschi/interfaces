@@ -1,14 +1,15 @@
 //para peg.html
 
 // Clase para manejar los tipos de planetas
-class PlanetType {
-    constructor(colors, glow, name, imagePath) {
-        this.colors = colors;
-        this.glow = glow;
+class PlanetType { //plantilla para crear objetos que representan tipos de planetas en el juego. serían las piezas del tablero
+    constructor(colors, glow, name, imagePath) { 
+        this.colors = colors; //guarda los colores del planeta.
+        this.glow = glow; //guarda el color del resplandor.
         this.name = name;
         this.imagePath = imagePath;
-        this.image = null;
+        this.image = null; //inicialmente null; más adelante se usará para almacenar el objeto Image
         this.imageLoaded = false;
+        //Cada "tipo de planeta" tiene colores, un efecto de resplandor, un nombre y opcionalmente una imagen.
         
         // Cargar imagen si se proporciona una ruta
         if (imagePath) {
@@ -22,27 +23,34 @@ class PlanetType {
 }
 
 // Clase para representar una posición en el tablero
+//útil para juegos tipo "tablero" donde necesitas saber dónde está cada elemento.
 class Position {
     constructor(row, col) {
         this.row = row;
         this.col = col;
     }
 
-    equals(other) {
-        return this.row === other.row && this.col === other.col;
+    equals(other) { //comparar dos posiciones para ver si son iguales.
+        return this.row === other.row && this.col === other.col; //true si la fila y la columna coinciden, false si no.
     }
 }
 
 // Clase para representar un movimiento válido
 class Move {
     constructor(toRow, toCol, jumpRow, jumpCol) {
-        this.to = new Position(toRow, toCol);
-        this.jump = new Position(jumpRow, jumpCol);
+        this.to = new Position(toRow, toCol); //posición final a donde se mueve la pieza.
+        this.jump = new Position(jumpRow, jumpCol); //posición de la pieza que se elimina al hacer el salto.
     }
+    /*
+    toRow → fila destino del movimiento.
+    toCol → columna destino del movimiento.
+    jumpRow → fila de la pieza que se va a saltar.
+    jumpCol → columna de la pieza que se va a saltar.
+    */
 }
 
 // Clase para representar un botón
-class Button {
+class Button { 
     constructor(x, y, width, height, text, callback) {
         this.x = x;
         this.y = y;
@@ -53,13 +61,21 @@ class Button {
         this.isHovered = false;
     }
 
+
+    /*Recibe coordenadas (x, y) de un punto (por ejemplo, la posición del mouse).
+        Retorna true si el punto está dentro del botón, false si no.
+        Esto sirve para detectar hover o clics.
+    */
     isPointInside(x, y) {
         return x >= this.x && x <= this.x + this.width &&
                y >= this.y && y <= this.y + this.height;
     }
 
     draw(ctx) {
-              // Sombra
+        // Sombra
+        /**
+         * Cambia la sombra dependiendo si el cursor está encima (hover).
+        */
         if (this.isHovered) {
             ctx.shadowBlur = 15;
             ctx.shadowColor = 'rgba(255, 165, 0, 0.6)';
@@ -69,7 +85,8 @@ class Button {
         }
 
         // Fondo del botón estilo Los Simpson (amarillo a naranja)
-        const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
+        //degradado vertical para el fondo del botón: amarillo arriba, naranja abajo.
+        const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.height); 
         gradient.addColorStop(0, '#FDD017');
         gradient.addColorStop(1, '#FF8C00');
         ctx.fillStyle = gradient;
@@ -98,17 +115,18 @@ class Button {
 }
 
 // Clase para manejar el temporizador
+//iniciar, detener, reiniciar y formatear el tiempo restante.
 class GameTimer {
     constructor(initialTime, onTick, onExpire) {
-        this.timeLeft = initialTime;
-        this.initialTime = initialTime;
-        this.onTick = onTick;
-        this.onExpire = onExpire;
-        this.interval = null;
+        this.timeLeft = initialTime; //tiempo que queda en la cuenta regresiva.
+        this.initialTime = initialTime; //tiempo inicial para reiniciar.
+        this.onTick = onTick; //función que se llama cada segundo con el tiempo restante.
+        this.onExpire = onExpire; //función que se llama cuando el tiempo llega a 0.
+        this.interval = null; //referencia al setInterval para poder detenerlo más tarde.
     }
 
     start() {
-        this.stop();
+        this.stop(); //// asegura que no haya otro intervalo corriendo
         this.interval = setInterval(() => {
             this.timeLeft--;
             this.onTick(this.timeLeft);
@@ -117,41 +135,45 @@ class GameTimer {
                 this.stop();
                 this.onExpire();
             }
-        }, 1000);
+        }, 1000); //restar 1 segundo cada 1000 ms.
     }
 
-    stop() {
+    stop() { //Detiene el temporizador cancelando el setInterval.
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
         }
     }
 
-    reset() {
+    reset() { //Detiene el temporizador y reinicia el tiempo a su valor original.
         this.stop();
         this.timeLeft = this.initialTime;
     }
 
     getFormattedTime() {
-        const minutes = Math.floor(this.timeLeft / 60);
+        const minutes = Math.floor(this.timeLeft / 60); //calcula los minutos, % 60 los segundos.
         const seconds = this.timeLeft % 60;
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        //padStart(2, '0') asegura que siempre tenga dos dígitos
     }
 }
 
-// Clase principal del juego
+/* Clase principal del juego 
+Controla todo el juego: tablero, fichas, pantalla inicial, botones, temporizador y animaciones
+maneja estados como pantallas, selección de fichas, movimientos válidos, etc.
+*/
 class PegSolitaire {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
         
         // Constantes
-        this.BOARD_SIZE = 7;
-        this.CELL_SIZE = 70;
-        this.PEG_RADIUS = 20;
-        this.BOARD_OFFSET_X = 300;
-        this.BOARD_OFFSET_Y = 180;
-        this.GAME_TIME = 300; // 5 minutos
+        this.BOARD_SIZE = 7; //tablero 7x7. 
+        this.CELL_SIZE = 70; //tamaño de cada casilla en píxeles.
+        this.PEG_RADIUS = 20; //radio de cada ficha
+        this.BOARD_OFFSET_X = 300; //distancia desde el borde del canvas para centrar el tablero.
+        this.BOARD_OFFSET_Y = 180; //mismo
+        this.GAME_TIME = 300; // 5 minutos deduracion de juego
         
         // Tipos de planetas
         this.planetTypes = [
@@ -161,20 +183,20 @@ class PegSolitaire {
 
         
         // Estado del juego
-        this.board = [];
-        this.selectedPeg = null;
-        this.isDragging = false;
-        this.dragPosition = { x: 0, y: 0 };
-        this.validMoves = [];
+        this.board = []; //matriz 2D de fichas.
+        this.selectedPeg = null; //ficha que está siendo movida.
+        this.isDragging = false; //si el jugador está arrastrando una ficha.
+        this.dragPosition = { x: 0, y: 0 }; //posición actual del mouse al arrastrar.
+        this.validMoves = []; //movimientos válidos para la ficha seleccionada.
         this.moveCount = 0;
         this.showHints = false;
         this.showHelp = false;
         this.showMenuHelp = false;
         this.showModal = false;
-        this.modalTitle = '';
+        this.modalTitle = ''; 
         this.modalMessage = '';
-        this.hintAnimation = 0;
-        this.stars = this.generateStars(150);
+        this.hintAnimation = 0; //para animaciones de sugerencias.
+        this.stars = this.generateStars(150); //fondo de estrellas generado aleatoriamente.
 
         this.inStartScreen = true;
         this.startButtons = [];
@@ -182,8 +204,8 @@ class PegSolitaire {
         
         // Botones
         this.buttons = [];
-        this.createButtons();
-        this.createStartButtons();
+        this.createButtons(); //botones dentro del juego (p.ej., reiniciar).
+        this.createStartButtons(); //botones de la pantalla de inicio (comenzar, cómo jugar).
         
         // Timer
         this.timer = new GameTimer(
@@ -244,12 +266,14 @@ class PegSolitaire {
         for (let row = 0; row < this.BOARD_SIZE; row++) {
             this.board[row] = [];
             for (let col = 0; col < this.BOARD_SIZE; col++) {
-                if ((row < 2 || row > 4) && (col < 2 || col > 4)) {
-                    this.board[row][col] = -1;
+                if ((row < 2 || row > 4) && (col < 2 || col > 4)) { //define las esquinas inválidas del tablero de Peg Solitaire.
+                    this.board[row][col] = -1; //Tablero estándar tiene un patrón en cruz: las esquinas no se usan, se marcan como -1.
                 } else if (row === 3 && col === 3) {
-                    this.board[row][col] = 0;
+                    this.board[row][col] = 0; //La posición central (3,3) está vacía al inicio, representada con 0
                 } else {
                     this.board[row][col] = Math.floor(Math.random() * this.planetTypes.length) + 1;
+                    //Se elige un número aleatorio entre 1 y planetTypes.length.
+                    //Esto representa qué tipo de ficha/planeta se coloca en esa celda.
                 }
             }
         }
@@ -292,6 +316,8 @@ class PegSolitaire {
         this.ctx.fillText('La Batalla del Sofá', this.canvas.width / 2, 95);
     }
 
+
+    //se encarga de mostrar tres paneles de estadísticas sobre el tablero: tiempo restante, piezas restantes y movimientos realizados.
     drawStats() {
         const statsY = 130;
         const centerX = this.canvas.width / 2;
@@ -371,29 +397,33 @@ class PegSolitaire {
         // Dibujar celdas del tablero
         for (let row = 0; row < this.BOARD_SIZE; row++) {
             for (let col = 0; col < this.BOARD_SIZE; col++) {
-                if (this.board[row][col] === -1) continue;
+                if (this.board[row][col] === -1) continue; //-1 indica celdas inválidas (no forman parte del tablero).
                 
+                //x y y calculan la posición de cada celda en el canvas usando el offset y tamaño de celda.
                 const x = this.BOARD_OFFSET_X + col * this.CELL_SIZE;
                 const y = this.BOARD_OFFSET_Y + row * this.CELL_SIZE;
                 
                 // Dibujar celda
+                //Dibuja un rectángulo ligeramente transparente para representar la celda.
                 this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
                 this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
                 this.ctx.lineWidth = 2;
                 this.ctx.fillRect(x + 5, y + 5, this.CELL_SIZE - 10, this.CELL_SIZE - 10);
                 this.ctx.strokeRect(x + 5, y + 5, this.CELL_SIZE - 10, this.CELL_SIZE - 10);
                 
-                const isBeingDragged = this.selectedPeg && 
-                                      this.selectedPeg.row === row && 
-                                      this.selectedPeg.col === col && 
-                                      this.isDragging;
+                //Verifica si la ficha actual está seleccionada y se está arrastrando para no dibujarla en su posición original
+                const isBeingDragged = this.selectedPeg && this.selectedPeg.row === row && 
+                    this.selectedPeg.col === col && this.isDragging;
                 
+                
+                //Solo dibuja las fichas que no están vacías (0) y que no se están arrastrando.
                 if (this.board[row][col] > 0 && !isBeingDragged) {
                     const centerX = x + this.CELL_SIZE / 2;
                     const centerY = y + this.CELL_SIZE / 2;
-                    this.drawPlanet(centerX, centerY, this.PEG_RADIUS, this.board[row][col] - 1, false);
+                    this.drawPlanet(centerX, centerY, this.PEG_RADIUS, this.board[row][col] - 1, false); 
                 }
                 
+                //Si la celda está vacía (0), dibuja un círculo transparente para mostrar el lugar disponible.
                 if (this.board[row][col] === 0) {
                     this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
                     this.ctx.beginPath();
@@ -403,6 +433,7 @@ class PegSolitaire {
             }
         }
         
+        //Si hay una ficha seleccionada y las pistas están activadas, dibuja flechas o indicaciones de los movimientos válidos.
         if (this.selectedPeg) {
             
             if (this.showHints) {
@@ -412,9 +443,11 @@ class PegSolitaire {
             }
         }
         
+        //Dibuja la ficha seleccionada siguiendo la posición del mouse (dragPosition).
         if (this.selectedPeg && this.isDragging) {
             const typeIndex = this.board[this.selectedPeg.row][this.selectedPeg.col] - 1;
             this.drawPlanet(this.dragPosition.x, this.dragPosition.y, this.PEG_RADIUS + 5, typeIndex, true);
+            //Aumenta ligeramente el tamaño (+5) y le pone en true el isdraggin 
         }
 
         // Dibujar botones
@@ -589,7 +622,8 @@ class PegSolitaire {
         const modalY = (this.canvas.height - modalHeight) / 2;
 
         // Fondo del modal
-        const gradient = this.ctx.createLinearGradient(modalX, modalY, modalX, modalY + modalHeight);
+        //Crea un gradiente vertical de azul oscuro a azul más claro.
+        const gradient = this.ctx.createLinearGradient(modalX, modalY, modalX, modalY + modalHeight); 
         gradient.addColorStop(0, '#1a1a3e');
         gradient.addColorStop(1, '#2d2d5f');
         this.ctx.fillStyle = gradient;
@@ -602,7 +636,7 @@ class PegSolitaire {
 
         this.ctx.shadowBlur = 30;
         this.ctx.shadowColor = '#00ffff';
-        this.ctx.strokeRect(modalX, modalY, modalWidth, modalHeight);
+        this.ctx.strokeRect(modalX, modalY, modalWidth, modalHeight); //borde con resplandor (shadowBlur) para efecto visual más atractivo.
         this.ctx.shadowBlur = 0;
 
         // Título
@@ -621,12 +655,20 @@ class PegSolitaire {
         this.closeModalButton.draw(this.ctx);
     }
 
-    drawValidMoves() {
+    drawValidMoves() { //dibuja círculos verdes pulsantes sobre todas las celdas a las que la ficha seleccionada puede moverse.
         this.validMoves.forEach(move => {
             const x = this.BOARD_OFFSET_X + move.to.col * this.CELL_SIZE + this.CELL_SIZE / 2;
-            const y = this.BOARD_OFFSET_Y + move.to.row * this.CELL_SIZE + this.CELL_SIZE / 2;
+            const y = this.BOARD_OFFSET_Y + move.to.row * this.CELL_SIZE + this.CELL_SIZE / 2; //+ this.CELL_SIZE / 2 centra el círculo sobre la celda.
+            //Convierte las coordenadas de fila/columna del tablero a coordenadas (x, y) en el canvas.
             
+            //efecto de “pulso”
             const pulse = Math.sin(this.hintAnimation * 0.05) * 5 + 5;
+            /*
+            this.hintAnimation es un contador que aumenta con cada frame de animación.
+            Math.sin() genera un movimiento oscilante.
+            * 5 + 5 ajusta la amplitud para que el radio del círculo oscile entre 0 y 10 pixeles adicionales.
+            Esto da un efecto de pulso o respiración en las indicaciones de movimiento.
+            */
             
             this.ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
             this.ctx.strokeStyle = 'rgba(0, 255, 0, 0.8)';
@@ -644,36 +686,42 @@ class PegSolitaire {
         const fromX = this.BOARD_OFFSET_X + this.selectedPeg.col * this.CELL_SIZE + this.CELL_SIZE / 2;
         const fromY = this.BOARD_OFFSET_Y + this.selectedPeg.row * this.CELL_SIZE + this.CELL_SIZE / 2;
         
+        //validMoves es un array de posibles movimientos desde la ficha seleccionada.
         this.validMoves.forEach(move => {
             const toX = this.BOARD_OFFSET_X + move.to.col * this.CELL_SIZE + this.CELL_SIZE / 2;
             const toY = this.BOARD_OFFSET_Y + move.to.row * this.CELL_SIZE + this.CELL_SIZE / 2;
             
-            this.drawAnimatedArrow(fromX, fromY, toX, toY);
+            this.drawAnimatedArrow(fromX, fromY, toX, toY); //se encarga de dibujar una flecha desde la ficha seleccionada hasta la posición destino.
         });
     }
 
-    drawAnimatedArrow(fromX, fromY, toX, toY) {
-        const angle = Math.atan2(toY - fromY, toX - fromX);
-        const distance = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2);
+    drawAnimatedArrow(fromX, fromY, toX, toY) { //ace que cada flecha sea animada, pulsante y visible
+        const angle = Math.atan2(toY - fromY, toX - fromX); //dirección de la flecha desde el punto de origen hacia el destino (en radianes)
+        const distance = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2); //distancia total entre el inicio y el fin del movimiento
         
-        const animProgress = (Math.sin(this.hintAnimation * 0.08) + 1) / 2;
-        const arrowLength = distance * (0.4 + animProgress * 0.3);
+        const animProgress = (Math.sin(this.hintAnimation * 0.08) + 1) / 2; //oscila entre 0 y 1 usando sin, lo que hace que la flecha “crezca y se achique” suavemente.
+        const arrowLength = distance * (0.4 + animProgress * 0.3); //define la longitud actual de la flecha según la animación, nunca llega hasta el destino completo para crear efecto dinámico.
         
         const midX = fromX + Math.cos(angle) * arrowLength;
         const midY = fromY + Math.sin(angle) * arrowLength;
+        //midX y midY son las coordenadas del punto final visible de la flecha, que varía según la animación.
         
         const opacity = 0.6 + animProgress * 0.4;
+        //La flecha se vuelve más brillante y más tenue en el ciclo de animación, dando efecto de resaltado.
         
         this.ctx.strokeStyle = `rgba(255, 215, 0, ${opacity})`;
         this.ctx.lineWidth = 5;
         this.ctx.lineCap = 'round';
         this.ctx.beginPath();
         this.ctx.moveTo(fromX + Math.cos(angle) * 35, fromY + Math.sin(angle) * 35);
-        this.ctx.lineTo(midX, midY);
+        //La línea empieza a 35 px del centro de la ficha, no desde el centro exacto, para que la flecha no “tape” la ficha.
+        this.ctx.lineTo(midX, midY); //Se dibuja hasta midX, midY, la longitud animada.
         this.ctx.stroke();
         
+        
+        //cabeza de la flecha
         const headLength = 20;
-        const headAngle = Math.PI / 5;
+        const headAngle = Math.PI / 5; //cuán “ancha” es la punta
         
         this.ctx.fillStyle = `rgba(255, 215, 0, ${opacity})`;
         this.ctx.beginPath();
@@ -699,7 +747,7 @@ class PegSolitaire {
         const type = this.planetTypes[typeIndex];
         
         // Sombra/Glow
-        this.ctx.shadowBlur = dragging ? 30 : 15;
+        this.ctx.shadowBlur = dragging ? 30 : 15; //Si el planeta se está arrastrando (dragging = true), el brillo es más intenso
         this.ctx.shadowColor = type.glow;
         
         // Si tiene imagen cargada, dibujarla
@@ -719,6 +767,8 @@ class PegSolitaire {
             
             // Restaurar el contexto
             this.ctx.restore();
+
+            //save() y restore() permiten aislar la máscara para no afectar otros dibujos.
             
             // Borde del planeta
             this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
@@ -776,9 +826,11 @@ class PegSolitaire {
             this.ctx.stroke();
         }
         
-        this.ctx.shadowBlur = 0;
+        this.ctx.shadowBlur = 0; //Se resetea shadowBlur para que no afecte a otros elementos que se dibujen después.
     }
 
+
+    //convierte coordenadas de pantalla del mouse en una posición de celda dentro del tablero (row, col).
     getBoardPosition(x, y) {
         const col = Math.floor((x - this.BOARD_OFFSET_X) / this.CELL_SIZE);
         const row = Math.floor((y - this.BOARD_OFFSET_Y) / this.CELL_SIZE);
@@ -789,14 +841,16 @@ class PegSolitaire {
         return null;
     }
 
-    isValidPosition(row, col) {
+    isValidPosition(row, col) { //comprobación de límites y validez de celda antes de hacer cualquier movimiento.
         return row >= 0 && row < this.BOARD_SIZE && 
                col >= 0 && col < this.BOARD_SIZE && 
                this.board[row][col] !== -1;
     }
 
-    getValidMoves(row, col) {
-        const moves = [];
+    getValidMoves(row, col) {  //Determinar todos los movimientos válidos para una ficha situada en (row, col) en el tablero
+        const moves = []; //Lista donde se van a guardar los movimientos válidos.
+
+        //4 posibles saltos (arriba, abajo, izquierda, derecha).
         const directions = [
             { dr: -2, dc: 0, jr: -1, jc: 0 },
             { dr: 2, dc: 0, jr: 1, jc: 0 },
@@ -818,9 +872,10 @@ class PegSolitaire {
         });
         
         return moves;
+        //Devuelve la lista de todos los movimientos válidos para la ficha en (row, col).
     }
 
-    hasValidMoves() {
+    hasValidMoves() { //Determinar si hay al menos un movimiento válido en todo el tablero.
         for (let row = 0; row < this.BOARD_SIZE; row++) {
             for (let col = 0; col < this.BOARD_SIZE; col++) {
                 if (this.board[row][col] > 0) {
@@ -833,7 +888,15 @@ class PegSolitaire {
         return false;
     }
 
+    //movimiento solo si es válido: mueve una ficha desde fromPos a toPos, 
+    // elimina la ficha saltada y actualiza el contador de movimientos.
     makeMove(fromPos, toPos) {
+
+        /*
+        Recorre todos los movimientos válidos (this.validMoves) para la ficha seleccionada.
+        Busca uno cuyo destino (m.to) sea igual a toPos.
+        Si no encuentra ninguno → validMove será undefined.
+        */
         const validMove = this.validMoves.find(m => m.to.equals(toPos));
         
         if (validMove) {
@@ -842,17 +905,17 @@ class PegSolitaire {
             this.board[validMove.jump.row][validMove.jump.col] = 0;
             this.moveCount++;
             
-            setTimeout(() => this.checkGameOver(), 100);
+            setTimeout(() => this.checkGameOver(), 100); //Comprueba si el juego terminó.
             return true;
         }
         return false;
     }
 
-    countPegs() {
+    countPegs() { //Cuenta cuántas fichas (pegs) quedan en el tablero.
         let count = 0;
         for (let row = 0; row < this.BOARD_SIZE; row++) {
             for (let col = 0; col < this.BOARD_SIZE; col++) {
-                if (this.board[row][col] > 0) count++;
+                if (this.board[row][col] > 0) count++; //Si la celda contiene una ficha (> 0), incrementa el contador.
             }
         }
         return count;
@@ -862,18 +925,25 @@ class PegSolitaire {
         this.showGameOverModal('⏰ ¡Tiempo Agotado!', 'Se acabó el tiempo. ¡Intenta de nuevo!');
     }
 
+
+    /**
+    Determina si el juego terminó, ya sea porque:
+        Victoria: Solo queda una ficha en el tablero.
+        Derrota / fin de juego: No quedan movimientos válidos aunque haya más de una ficha.
+    */
     checkGameOver() {
         const pegsLeft = this.countPegs();
         
-        if (pegsLeft === 1) {
+        if (pegsLeft === 1) {//Detiene el temporizador.
             this.timer.stop();
-            this.showGameOverModal('🎉 ¡VICTORIA!', '¡Felicitaciones! Solo queda un planeta.');
-        } else if (!this.hasValidMoves()) {
+            this.showGameOverModal('🎉 ¡VICTORIA!', '¡Felicitaciones! Solo queda un planeta.'); //modal victoria
+        } else if (!this.hasValidMoves()) { //Si no hay movimientos válidos (aunque queden varias fichas):
             this.timer.stop();
-            this.showGameOverModal('😔 Juego Terminado', `No hay movimientos. Piezas: ${pegsLeft}`);
+            this.showGameOverModal('😔 Juego Terminado', `No hay movimientos. Piezas: ${pegsLeft}`); //modal derrota
         }
     }
 
+    //no dibuja el modal directamente, solo prepara los datos y activa la bandera para que el método de dibujo (drawModal()) lo muestre en pantalla.
     showGameOverModal(title, message) {
         this.modalTitle = title;
         this.modalMessage = message;
@@ -882,24 +952,25 @@ class PegSolitaire {
 
     closeModal() {
         this.showModal = false;
+        //showModal a false, por lo que en el próximo renderizado drawModal() ya no dibujará nada.
     }
 
-    reset() {
-        this.timer.stop();
-        this.selectedPeg = null;
-        this.isDragging = false;
-        this.validMoves = [];
-        this.showHelp = false;
+    reset() { //Esta función reinicia el juego completamente.
+        this.timer.stop(); //Detiene el temporizador actual.
+        this.selectedPeg = null; //Ninguna ficha está seleccionada.
+        this.isDragging = false; //No se está arrastrando ninguna ficha.
+        this.validMoves = []; //No hay movimientos válidos resaltados.
+        this.showHelp = false; 
         this.showModal = false;
-        this.initBoard();
+        this.initBoard(); //Reinicia el tablero a su estado inicial.
     }
 
-    toggleHints() {
+    toggleHints() { //Cambia el estado de las ayudas visuales del juego (flechas y círculos de sugerencia).
         this.showHints = !this.showHints;
         this.hintsButton.text = this.showHints ? '💡 Desactivar Ayudas' : '💡 Activar Ayudas';
     }
 
-    toggleHelp() {
+    toggleHelp() { //Alterna la pantalla de ayuda del juego.
         this.showHelp = !this.showHelp;
     }
 
@@ -909,20 +980,20 @@ class PegSolitaire {
 
     // --- Mouse move (hover + drag) ---
     this.canvas.addEventListener('mousemove', (e) => {
-        const rect = this.canvas.getBoundingClientRect();
+        const rect = this.canvas.getBoundingClientRect(); //rect toma en cuenta la posición del canvas en la página.
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
         // Si estamos en la pantalla de inicio
-        if (this.inStartScreen) {
+        if (this.inStartScreen) { //Comprueba si el mouse está sobre los botones de inicio.
             this.startButtons.forEach(btn => btn.isHovered = btn.isPointInside(x, y));
             this.canvas.style.cursor = this.startButtons.some(b => b.isHovered) ? 'pointer' : 'default';
-            return;
+            return; //Retorna porque no necesita procesar el resto de eventos del tablero mientras está en la pantalla de inicio.
         }
 
         // Hover de botones principales
         this.buttons.forEach(button => {
-            button.isHovered = button.isPointInside(x, y);
+            button.isHovered = button.isPointInside(x, y); //Actualiza la propiedad isHovered de cada botón
         });
 
         // Hover del botón de menú
@@ -935,6 +1006,7 @@ class PegSolitaire {
         }
 
         // Drag and drop
+        //Si se está arrastrando una ficha seleccionada, se actualiza la posición de arrastre (dragPosition)
         if (this.isDragging && this.selectedPeg) {
             this.dragPosition.x = x;
             this.dragPosition.y = y;
@@ -954,10 +1026,12 @@ class PegSolitaire {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
+        //Obtiene posición del mouse al hacer clic.
+
         if (this.inStartScreen && this.showMenuHelp) {
-    this.showMenuHelp = false; // cerrar panel de ayuda en menú
-    return;
-}
+            this.showMenuHelp = false; // cerrar panel de ayuda en menú
+            return;
+        }
 
         // Si estamos en la pantalla inicial
         if (this.inStartScreen) {
@@ -980,6 +1054,7 @@ class PegSolitaire {
 
 
         // Botones del modal
+        //Detecta clics sobre los botones del modal y ejecuta su acción.
         if (this.showModal) {
             if (this.playAgainButton.isPointInside(x, y)) {
                 this.playAgainButton.click();
@@ -1007,6 +1082,13 @@ class PegSolitaire {
         }
 
         // Seleccionar ficha (inicio de drag)
+        /**
+        Si el clic cae sobre una ficha del tablero:
+        La selecciona (selectedPeg)
+        Calcula los movimientos válidos (validMoves)
+        Activa el arrastre (isDragging)
+        Guarda la posición del mouse (dragPosition)
+         */
         const pos = this.getBoardPosition(x, y);
         if (pos && this.board[pos.row][pos.col] > 0) {
             this.selectedPeg = pos;
@@ -1017,6 +1099,10 @@ class PegSolitaire {
     });
 
     // --- Mouse up (soltar drag) ---
+    //Termina el arrastre de una ficha.
+    // Si se suelta sobre una posición válida, se hace el movimiento (makeMove).
+    // Luego limpia las variables de arrastre.
+
     this.canvas.addEventListener('mouseup', (e) => {
         if (this.isDragging && this.selectedPeg) {
             const rect = this.canvas.getBoundingClientRect();
@@ -1033,6 +1119,7 @@ class PegSolitaire {
     });
 
     // --- Mouse leave (salida del canvas) ---
+    //Evita que la ficha quede “pegada” si el mouse sale del canvas durante un arrastre.
     this.canvas.addEventListener('mouseleave', () => {
         if (this.isDragging) {
             this.isDragging = false;
@@ -1043,9 +1130,12 @@ class PegSolitaire {
 }
 
     animate() {
-    requestAnimationFrame(() => this.animate());
+    requestAnimationFrame(() => this.animate()); //Llama a animate en el siguiente frame de animación.
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.hintAnimation++;
+    /*
+    Incrementa un contador (hintAnimation) que se usa para animar flechas y pulsos de movimientos válidos (drawHintArrows() y drawValidMoves()).
+    Como se incrementa en cada frame, la animación es suave y continua.*/
 
     if (this.inStartScreen) {
         this.drawStartScreen();
