@@ -442,9 +442,9 @@ class PegSolitaire {
 
         // Panel de ayuda más compacto
         const panelWidth = 600;
-        const panelHeight = 470;
+        const panelHeight = 550;
         const panelX = (this.canvas.width - panelWidth) / 2;
-        const panelY = 120;
+        const panelY = 50;
 
         this.ctx.fillStyle = 'rgba(26, 26, 62, 0.95)';
         this.ctx.strokeStyle = '#00ffff';
@@ -504,12 +504,13 @@ class PegSolitaire {
         this.ctx.fillStyle = '#00ffff';
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 8);
+        this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 25);
     }
 
     drawMenuHelpScreen() {
+
     // Fondo semi-transparente
-    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.60)';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Panel
