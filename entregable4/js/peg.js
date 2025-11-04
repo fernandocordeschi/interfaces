@@ -94,7 +94,7 @@ class Button {
 
         // Borde negro
         ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 0.5;
         ctx.strokeRect(this.x, this.y, this.width, this.height);
 
         ctx.shadowBlur = 0;
@@ -177,8 +177,8 @@ class PegSolitaire {
 
         // Tipos de planetas
         this.planetTypes = [
-            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Homero', 'images/bart.png'),
-            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Bart', 'images/homero.png'),
+            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Bart', 'images/bart.png'),
+            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Homero', 'images/homero.png'),
         ];
 
         // Imagen de fondo
@@ -346,7 +346,7 @@ class PegSolitaire {
         this.ctx.font = 'bold 36px Arial';  // Cambio: 48px → 36px
         this.ctx.textAlign = 'center';
         this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = 1;
         this.ctx.strokeText('PEG SOLITAIRE: Homer vs Bart', this.canvas.width / 2, 40);  // Cambio: 60 → 40
         this.ctx.fillText('PEG SOLITAIRE: Homer vs Bart', this.canvas.width / 2, 40);
         this.ctx.shadowBlur = 0;
@@ -365,7 +365,7 @@ class PegSolitaire {
 
         // Panel de estadísticas
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-        this.ctx.strokeStyle = '#00ffff';
+        this.ctx.strokeStyle = '#FF8C00';
         this.ctx.lineWidth = 2;
 
         // Timer
@@ -381,7 +381,7 @@ class PegSolitaire {
     drawStatBox(x, y, width, height, text) {
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
         this.ctx.fillRect(x, y, width, height);
-        this.ctx.strokeStyle = '#00ffff';
+        this.ctx.strokeStyle = '#FF8C00';
         this.ctx.strokeRect(x, y, width, height);
 
         this.ctx.fillStyle = 'white';
@@ -391,44 +391,36 @@ class PegSolitaire {
         this.ctx.fillText(text, x + width / 2, y + height / 2);
     }
 
-    drawLegend() {
-        const legendY = 380;  // Cambio: 450 → 340 (más arriba, cerca de botones)
-        const startX = 800;  // Cambio: 950 → 580 (alineada con botones)
+drawLegend() {
+    const legendY = 380;
+    const startX = 800;
 
+    this.ctx.fillStyle = 'white';
+    this.ctx.font = 'bold 18px Arial';  // Cambio: 16px → 18px (más grande)
+    this.ctx.textAlign = 'left';
+    this.ctx.fillText('🎨 LEYENDA', startX, legendY);
+
+    this.planetTypes.forEach((type, index) => {
+        const y = legendY + 40 + index * 45;  // Cambio: 35 y 32 → 40 y 45 (más espaciado)
+
+        // Fondo para cada item (más grande)
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        this.ctx.fillRect(startX - 5, y - 22, 180, 40);  // Cambio: 180x28 → 220x40
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeRect(startX - 5, y - 22, 180, 40);
+
+        // Dibujar mini planeta usando imagen (igual que en el tablero)
+        this.drawPlanet(startX + 18, y, 16, index, false);  // Cambio: radio 10 → 16, usa drawPlanet
+
+        // Texto (más grande)
         this.ctx.fillStyle = 'white';
-        this.ctx.font = 'bold 16px Arial';  // Cambio: 18px → 16px
+        this.ctx.font = 'bold 16px Arial';  // Cambio: 14px → 16px bold
         this.ctx.textAlign = 'left';
-        this.ctx.fillText('🎨 LEYENDA', startX, legendY);
-
-        this.planetTypes.forEach((type, index) => {
-            const y = legendY + 35 + index * 32;  // Cambio: espaciado más compacto
-
-            // Fondo para cada item
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            this.ctx.fillRect(startX - 5, y - 16, 180, 28);  // Cambio: 200x32 → 180x28
-            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-            this.ctx.lineWidth = 1;
-            this.ctx.strokeRect(startX - 5, y - 16, 180, 28);
-
-            // Dibujar mini planeta
-            const gradient = this.ctx.createRadialGradient(startX + 10, y, 0, startX + 10, y, 10);  // Cambio: radio 12 → 10
-            gradient.addColorStop(0, type.colors[0]);
-            gradient.addColorStop(1, type.colors[1]);
-
-            this.ctx.shadowBlur = 8;
-            this.ctx.shadowColor = type.glow;
-            this.ctx.fillStyle = gradient;
-            this.ctx.beginPath();
-            this.ctx.arc(startX + 10, y, 10, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.shadowBlur = 0;
-
-            // Texto
-            this.ctx.fillStyle = 'white';
-            this.ctx.font = '14px Arial';  // Cambio: 15px → 14px
-            this.ctx.fillText(type.name, startX + 30, y + 4);
-        });
-    }
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText(type.name, startX + 45, y);  // Cambio: 30 → 45 (más espacio)
+    });
+}
 
     drawBoard() {
         this.drawBackground();
@@ -447,7 +439,7 @@ class PegSolitaire {
                 // Dibujar celda
                 //Dibuja un rectángulo ligeramente transparente para representar la celda.
                 this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-                this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
+                this.ctx.strokeStyle = '#ff8c00c8';
                 this.ctx.lineWidth = 2;
                 this.ctx.fillRect(x + 5, y + 5, this.CELL_SIZE - 10, this.CELL_SIZE - 10);
                 this.ctx.strokeRect(x + 5, y + 5, this.CELL_SIZE - 10, this.CELL_SIZE - 10);
@@ -509,7 +501,7 @@ class PegSolitaire {
         }
     }
 
-    drawHelpScreen() {
+    /**drawHelpScreen() {
         // Fondo semi-transparente
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -521,13 +513,13 @@ class PegSolitaire {
         const panelY = 50;
 
         this.ctx.fillStyle = 'rgba(26, 26, 62, 0.95)';
-        this.ctx.strokeStyle = '#00ffff';
+        this.ctx.strokeStyle = '#FF8C00';
         this.ctx.lineWidth = 3;
         this.ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
         this.ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
 
         // Título
-        this.ctx.fillStyle = '#00ffff';
+        this.ctx.fillStyle = '#FF8C00';
         this.ctx.font = 'bold 28px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('📖 CÓMO JUGAR', this.canvas.width / 2, panelY + 45);
@@ -565,7 +557,7 @@ class PegSolitaire {
         helpText.forEach((line, index) => {
             if (line.includes('OBJETIVO') || line.includes('REGLAS') || line.includes('AYUDAS') ||
                 line.includes('TIEMPO') || line.includes('FIN')) {
-                this.ctx.fillStyle = '#9d7dff';
+                this.ctx.fillStyle = '#FF8C00';
                 this.ctx.font = 'bold 16px Arial';
             } else {
                 this.ctx.fillStyle = 'white';
@@ -579,7 +571,7 @@ class PegSolitaire {
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 25);
-    }
+    }**/
 
     drawMenuHelpScreen() {
 
@@ -593,14 +585,14 @@ class PegSolitaire {
         const panelX = (this.canvas.width - panelWidth) / 2;
         const panelY = 25;
 
-        this.ctx.fillStyle = 'rgba(26, 26, 62, 0.95)';
-        this.ctx.strokeStyle = '#00ffff';
+        this.ctx.fillStyle = 'rgba(62, 37, 26, 0.95)';
+        this.ctx.strokeStyle = '#FDD017';
         this.ctx.lineWidth = 3;
         this.ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
         this.ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
 
         // Título
-        this.ctx.fillStyle = '#00ffff';
+        this.ctx.fillStyle = '#FDD017';
         this.ctx.font = 'bold 28px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('📖 CÓMO JUGAR', this.canvas.width / 2, panelY + 45);
@@ -635,7 +627,7 @@ class PegSolitaire {
         helpText.forEach((line, index) => {
             if (line.includes('OBJETIVO') || line.includes('REGLAS') || line.includes('AYUDAS') ||
                 line.includes('TIEMPO') || line.includes('FIN')) {
-                this.ctx.fillStyle = '#9d7dff';
+                this.ctx.fillStyle = '#FF8C00';
                 this.ctx.font = 'bold 16px Arial';
             } else {
                 this.ctx.fillStyle = 'white';
@@ -645,7 +637,7 @@ class PegSolitaire {
         });
 
         // Botón para cerrar (clic en cualquier lugar)
-        this.ctx.fillStyle = '#00ffff';
+        this.ctx.fillStyle = '#FDD017';
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 25);
@@ -1193,8 +1185,8 @@ class PegSolitaire {
         this.ctx.fillStyle = '#FFD90F';
         this.ctx.font = 'bold 60px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = 5;
+        this.ctx.strokeStyle = '#ff6a0063';
+        this.ctx.lineWidth = 2;
         this.ctx.strokeText('PEG SOLITAIRE', this.canvas.width / 2, 200);
         this.ctx.fillText('PEG SOLITAIRE', this.canvas.width / 2, 200);
 
