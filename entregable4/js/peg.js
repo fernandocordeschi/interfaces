@@ -249,32 +249,32 @@ class PegSolitaire {
 
         this.buttons = [this.resetButton, this.helpButton, this.hintsButton];
 
-    // Botones del modal (ajustados para modal más pequeño)
-    const modalWidth = 400;
-    const modalHeight = 240;
-    const modalX = (this.canvas.width - modalWidth) / 2;
-    const modalY = (this.canvas.height - modalHeight) / 2;
-    
-    this.playAgainButton = new Button(
-        this.canvas.width / 2 - 100,  // Centrado en el canvas
-        modalY + modalHeight - 90,     // 90px desde el fondo del modal
-        200, 
-        40,                            // Cambio: 45 → 40 (más pequeño)
-        'Jugar de Nuevo', 
-        () => {
-            this.closeModal();
-            this.reset();
-        }
-    );
-    
-    this.closeModalButton = new Button(
-        this.canvas.width / 2 - 100,   // Centrado en el canvas
-        modalY + modalHeight - 45,     // 45px desde el fondo del modal
-        200, 
-        40,                            // Cambio: 45 → 40 (más pequeño)
-        'Cerrar', 
-        () => this.closeModal()
-    );
+        // Botones del modal (ajustados para modal más pequeño)
+        const modalWidth = 400;
+        const modalHeight = 240;
+        const modalX = (this.canvas.width - modalWidth) / 2;
+        const modalY = (this.canvas.height - modalHeight) / 2;
+
+        this.playAgainButton = new Button(
+            this.canvas.width / 2 - 100,  // Centrado en el canvas
+            modalY + modalHeight - 90,     // 90px desde el fondo del modal
+            200,
+            40,                            // Cambio: 45 → 40 (más pequeño)
+            'Jugar de Nuevo',
+            () => {
+                this.closeModal();
+                this.reset();
+            }
+        );
+
+        this.closeModalButton = new Button(
+            this.canvas.width / 2 - 100,   // Centrado en el canvas
+            modalY + modalHeight - 45,     // 45px desde el fondo del modal
+            200,
+            40,                            // Cambio: 45 → 40 (más pequeño)
+            'Cerrar',
+            () => this.closeModal()
+        );
     }
 
     generateStars(count) {
@@ -411,36 +411,36 @@ class PegSolitaire {
         this.ctx.fillText(text, x + width / 2, y + height / 2);
     }
 
-drawLegend() {
-    const legendY = 380;
-    const startX = 800;
+    drawLegend() {
+        const legendY = 380;
+        const startX = 800;
 
-    this.ctx.fillStyle = 'white';
-    this.ctx.font = 'bold 18px Arial';  // Cambio: 16px → 18px (más grande)
-    this.ctx.textAlign = 'left';
-    this.ctx.fillText('Personajes', startX, legendY);
-
-    this.pieceTypes.forEach((type, index) => {
-        const y = legendY + 40 + index * 45;  // Cambio: 35 y 32 → 40 y 45 (más espaciado)
-
-        // Fondo para cada item (más grande)
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-        this.ctx.fillRect(startX - 5, y - 22, 180, 40);  // Cambio: 180x28 → 220x40
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        this.ctx.lineWidth = 1;
-        this.ctx.strokeRect(startX - 5, y - 22, 180, 40);
-
-        // Dibujar mini ficha usando imagen (igual que en el tablero)
-        this.drawPiece(startX + 18, y, 16, index, false);  // Cambio: radio 10 → 16, usa drawPiece
-
-        // Texto (más grande)
         this.ctx.fillStyle = 'white';
-        this.ctx.font = 'bold 16px Arial';  // Cambio: 14px → 16px bold
+        this.ctx.font = 'bold 18px Arial';  // Cambio: 16px → 18px (más grande)
         this.ctx.textAlign = 'left';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.fillText(type.name, startX + 45, y);  // Cambio: 30 → 45 (más espacio)
-    });
-}
+        this.ctx.fillText('Personajes', startX, legendY);
+
+        this.pieceTypes.forEach((type, index) => {
+            const y = legendY + 40 + index * 45;  // Cambio: 35 y 32 → 40 y 45 (más espaciado)
+
+            // Fondo para cada item (más grande)
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            this.ctx.fillRect(startX - 5, y - 22, 180, 40);  // Cambio: 180x28 → 220x40
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            this.ctx.lineWidth = 1;
+            this.ctx.strokeRect(startX - 5, y - 22, 180, 40);
+
+            // Dibujar mini ficha usando imagen (igual que en el tablero)
+            this.drawPiece(startX + 18, y, 16, index, false);  // Cambio: radio 10 → 16, usa drawPiece
+
+            // Texto (más grande)
+            this.ctx.fillStyle = 'white';
+            this.ctx.font = 'bold 16px Arial';  // Cambio: 14px → 16px bold
+            this.ctx.textAlign = 'left';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillText(type.name, startX + 45, y);  // Cambio: 30 → 45 (más espacio)
+        });
+    }
 
     drawBoard() {
         this.drawBackground();
@@ -1182,19 +1182,25 @@ drawLegend() {
     }
 
     animate() {
-        requestAnimationFrame(() => this.animate()); //Llama a animate en el siguiente frame de animación.
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.hintAnimation++;
-        /*
-        Incrementa un contador (hintAnimation) que se usa para animar flechas y pulsos de movimientos válidos (drawHintArrows() y drawValidMoves()).
-        Como se incrementa en cada frame, la animación es suave y continua.*/
-
+        
+        //pantalla inicial
         if (this.inStartScreen) {
             this.drawStartScreen();
+        // tablero de juego
         } else {
             this.drawBoard();
         }
+
+        // 🧠 Solo saltamos el dibujo, no detenemos el loop
+        if (this.showModal || this.showHelp) {
+            // nada, se saltea animación activa
+        }
+        //llama al siguiente frame de animación.
+        requestAnimationFrame(() => this.animate());
     }
+
 
     drawStartScreen() {
         this.drawBackground();
