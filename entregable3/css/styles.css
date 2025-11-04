@@ -794,6 +794,7 @@ body {
     /* rellena y recorta la imagen */
     border-radius: 15px;
     background: #222;
+    object-position: top center;  /* enfoca la parte superior de la imagen */
 }
 
 /* Tarjeta activa */
