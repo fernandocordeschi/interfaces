@@ -319,7 +319,7 @@ class PegSolitaire {
             this.ctx.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
 
             // Oscurecer un poco el fondo
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
             this.ctx.fillStyle = '#0a0e27';

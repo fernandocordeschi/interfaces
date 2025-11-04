@@ -147,6 +147,7 @@ class Game {
     this.createMenuButtons();
     this.render();
   }
+  
   renderPreview() {
     this.ctx.fillStyle = '#ffffff'; //Antes de dibujar nada, borra toda la pantalla llenándola con blanco.
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); //Esto evita que queden restos del dibujo anterior.
@@ -561,7 +562,7 @@ class Game {
     if (relacionImagen < relacionTablero) {
       // Imagen más "vertical" → recortamos arriba/abajo
       altoImagenUsada = this.currentImage.width / relacionTablero;
-      offsetY = (this.currentImage.height - altoImagenUsada) / 2;
+      offsetY = (this.currentImage.height - altoImagenUsada) / 2; 
     } else if (relacionImagen > relacionTablero) {
       // Imagen más "horizontal" → recortamos izquierda/derecha
       anchoImagenUsada = this.currentImage.height * relacionTablero;
