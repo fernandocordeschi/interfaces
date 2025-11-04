@@ -249,12 +249,32 @@ class PegSolitaire {
 
         this.buttons = [this.resetButton, this.helpButton, this.hintsButton];
 
-        // Botones del modal (más pequeños)
-        this.playAgainButton = new Button(this.canvas.width / 2 - 110, this.canvas.height / 2 + 50, 200, 45, 'Jugar de Nuevo', () => {
+    // Botones del modal (ajustados para modal más pequeño)
+    const modalWidth = 400;
+    const modalHeight = 240;
+    const modalX = (this.canvas.width - modalWidth) / 2;
+    const modalY = (this.canvas.height - modalHeight) / 2;
+    
+    this.playAgainButton = new Button(
+        this.canvas.width / 2 - 100,  // Centrado en el canvas
+        modalY + modalHeight - 90,     // 90px desde el fondo del modal
+        200, 
+        40,                            // Cambio: 45 → 40 (más pequeño)
+        'Jugar de Nuevo', 
+        () => {
             this.closeModal();
             this.reset();
-        });
-        this.closeModalButton = new Button(this.canvas.width / 2 - 110, this.canvas.height / 2 + 105, 200, 45, 'Cerrar', () => this.closeModal());
+        }
+    );
+    
+    this.closeModalButton = new Button(
+        this.canvas.width / 2 - 100,   // Centrado en el canvas
+        modalY + modalHeight - 45,     // 45px desde el fondo del modal
+        200, 
+        40,                            // Cambio: 45 → 40 (más pequeño)
+        'Cerrar', 
+        () => this.closeModal()
+    );
     }
 
     generateStars(count) {
@@ -501,7 +521,7 @@ drawLegend() {
         }
     }
 
-    /**drawHelpScreen() {
+    drawHelpScreen() {
         // Fondo semi-transparente
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -510,16 +530,16 @@ drawLegend() {
         const panelWidth = 600;
         const panelHeight = 550;
         const panelX = (this.canvas.width - panelWidth) / 2;
-        const panelY = 50;
+        const panelY = 20;
 
-        this.ctx.fillStyle = 'rgba(26, 26, 62, 0.95)';
-        this.ctx.strokeStyle = '#FF8C00';
+        this.ctx.fillStyle = 'rgba(62, 37, 26, 0.95)';
+        this.ctx.strokeStyle = '#FDD017';
         this.ctx.lineWidth = 3;
         this.ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
         this.ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
 
         // Título
-        this.ctx.fillStyle = '#FF8C00';
+        this.ctx.fillStyle = '#FDD017';
         this.ctx.font = 'bold 28px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('📖 CÓMO JUGAR', this.canvas.width / 2, panelY + 45);
@@ -567,11 +587,11 @@ drawLegend() {
         });
 
         // Botón cerrar
-        this.ctx.fillStyle = '#00ffff';
+        this.ctx.fillStyle = '#FDD017';
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('Clic en cualquier lugar para cerrar', this.canvas.width / 2, panelY + panelHeight - 25);
-    }**/
+    }
 
     drawMenuHelpScreen() {
 
@@ -656,23 +676,23 @@ drawLegend() {
 
         // Fondo del modal
         const gradient = this.ctx.createLinearGradient(modalX, modalY, modalX, modalY + modalHeight);
-        gradient.addColorStop(0, '#1a1a3e');
-        gradient.addColorStop(1, '#2d2d5f');
+        gradient.addColorStop(0, 'rgba(62, 37, 26, 0.95)');
+        gradient.addColorStop(1, '#5f442dff');
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(modalX, modalY, modalWidth, modalHeight);
 
         // Borde brillante
-        this.ctx.strokeStyle = '#00ffff';
-        this.ctx.lineWidth = 3;
+        this.ctx.strokeStyle = '#FDD017';
+        this.ctx.lineWidth = 1.5;
         this.ctx.strokeRect(modalX, modalY, modalWidth, modalHeight);
 
         this.ctx.shadowBlur = 30;
-        this.ctx.shadowColor = '#00ffff';
+        this.ctx.shadowColor = '#FDD017';
         this.ctx.strokeRect(modalX, modalY, modalWidth, modalHeight);
         this.ctx.shadowBlur = 0;
 
         // Título (más pequeño)
-        this.ctx.fillStyle = '#00ffff';
+        this.ctx.fillStyle = '#FDD017';
         this.ctx.font = 'bold 28px Arial';  // Cambio: 36px → 28px
         this.ctx.textAlign = 'center';
         this.ctx.fillText(this.modalTitle, this.canvas.width / 2, modalY + 60);
