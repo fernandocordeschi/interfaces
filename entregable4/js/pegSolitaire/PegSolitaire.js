@@ -1,168 +1,14 @@
-//para peg.html
-
-// Clase para manejar los tipos de fichas
-class PieceType { //plantilla para crear objetos que representan tipos de fichas en el juego. serían las piezas del tablero
-    constructor(colors, glow, name, imagePath) {
-        this.colors = colors; //guarda los colores del fichas.
-        this.glow = glow; //guarda el color del resplandor.
-        this.name = name;
-        this.imagePath = imagePath;
-        this.image = null; //inicialmente null; más adelante se usará para almacenar el objeto Image
-        this.imageLoaded = false;
-        //Cada "tipo de fichas" tiene colores, un efecto de resplandor, un nombre y opcionalmente una imagen.
-
-        // Cargar imagen si se proporciona una ruta
-        if (imagePath) {
-            this.image = new Image();
-            this.image.onload = () => {
-                this.imageLoaded = true;
-            };
-            this.image.src = imagePath;
-        }
-    }
-}
-
-// Clase para representar una posición en el tablero
-//útil para juegos tipo "tablero" donde necesitas saber dónde está cada elemento.
-class Position {
-    constructor(row, col) {
-        this.row = row;
-        this.col = col;
-    }
-
-    equals(other) { //comparar dos posiciones para ver si son iguales.
-        return this.row === other.row && this.col === other.col; //true si la fila y la columna coinciden, false si no.
-    }
-}
-
-// Clase para representar un movimiento válido
-class Move {
-    constructor(toRow, toCol, jumpRow, jumpCol) {
-        this.to = new Position(toRow, toCol); //posición final a donde se mueve la pieza.
-        this.jump = new Position(jumpRow, jumpCol); //posición de la pieza que se elimina al hacer el salto.
-    }
-    /*
-    toRow → fila destino del movimiento.
-    toCol → columna destino del movimiento.
-    jumpRow → fila de la pieza que se va a saltar.
-    jumpCol → columna de la pieza que se va a saltar.
-    */
-}
-
-// Clase para representar un botón
-class Button {
-    constructor(x, y, width, height, text, callback) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.text = text;
-        this.callback = callback;
-        this.isHovered = false;
-    }
-
-
-    /*Recibe coordenadas (x, y) de un punto (por ejemplo, la posición del mouse).
-        Retorna true si el punto está dentro del botón, false si no.
-        Esto sirve para detectar hover o clics.
-    */
-    isPointInside(x, y) {
-        return x >= this.x && x <= this.x + this.width &&
-            y >= this.y && y <= this.y + this.height;
-    }
-
-    draw(ctx) {
-        // Sombra
-        /**
-         * Cambia la sombra dependiendo si el cursor está encima (hover).
-        */
-        if (this.isHovered) {
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = 'rgba(255, 165, 0, 0.6)';
-        } else {
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = 'rgba(255, 165, 0, 0.3)';
-        }
-
-        // Fondo del botón estilo Los Simpson (amarillo a naranja)
-        //degradado vertical para el fondo del botón: amarillo arriba, naranja abajo.
-        const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
-        gradient.addColorStop(0, '#FDD017');
-        gradient.addColorStop(1, '#FF8C00');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-
-        // Borde negro
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
-
-        ctx.shadowBlur = 0;
-
-        // Texto
-        ctx.fillStyle = '#000000';
-        ctx.font = 'bold 16px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
-    }
-
-    click() {
-        if (this.callback) {
-            this.callback();
-        }
-    }
-}
-
-// Clase para manejar el temporizador
-//iniciar, detener, reiniciar y formatear el tiempo restante.
-class GameTimer {
-    constructor(initialTime, onTick, onExpire) {
-        this.timeLeft = initialTime; //tiempo que queda en la cuenta regresiva.
-        this.initialTime = initialTime; //tiempo inicial para reiniciar.
-        this.onTick = onTick; //función que se llama cada segundo con el tiempo restante.
-        this.onExpire = onExpire; //función que se llama cuando el tiempo llega a 0.
-        this.interval = null; //referencia al setInterval para poder detenerlo más tarde.
-    }
-
-    start() {
-        this.stop(); //// asegura que no haya otro intervalo corriendo
-        this.interval = setInterval(() => {
-            this.timeLeft--;
-            this.onTick(this.timeLeft);
-
-            if (this.timeLeft <= 0) {
-                this.stop();
-                this.onExpire();
-            }
-        }, 1000); //restar 1 segundo cada 1000 ms.
-    }
-
-    stop() { //Detiene el temporizador cancelando el setInterval.
-        if (this.interval) {
-            clearInterval(this.interval);
-            this.interval = null;
-        }
-    }
-
-    reset() { //Detiene el temporizador y reinicia el tiempo a su valor original.
-        this.stop();
-        this.timeLeft = this.initialTime;
-    }
-
-    getFormattedTime() {
-        const minutes = Math.floor(this.timeLeft / 60); //calcula los minutos, % 60 los segundos.
-        const seconds = this.timeLeft % 60;
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        //padStart(2, '0') asegura que siempre tenga dos dígitos
-    }
-}
+import { PieceType } from './PieceType.js';
+import { Position } from './Position.js';
+import { Move } from './Move.js';
+import { Button } from './Button.js';
+import { GameTimer } from './GameTimer.js';
 
 /* Clase principal del juego 
 Controla todo el juego: tablero, fichas, pantalla inicial, botones, temporizador y animaciones
 maneja estados como pantallas, selección de fichas, movimientos válidos, etc.
 */
-class PegSolitaire {
+export class PegSolitaire {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
@@ -1246,9 +1092,3 @@ drawLegend() {
         this.startButtons = [startBtn, helpBtn];
     }
 }
-
-// Inicializar el juego
-let game;
-window.addEventListener('load', () => {
-    game = new PegSolitaire('gameCanvas');
-});
