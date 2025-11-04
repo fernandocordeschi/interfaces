@@ -1,15 +1,15 @@
 //para peg.html
 
-// Clase para manejar los tipos de planetas
-class PlanetType { //plantilla para crear objetos que representan tipos de planetas en el juego. serían las piezas del tablero
+// Clase para manejar los tipos de fichas
+class PieceType { //plantilla para crear objetos que representan tipos de fichas en el juego. serían las piezas del tablero
     constructor(colors, glow, name, imagePath) {
-        this.colors = colors; //guarda los colores del planeta.
+        this.colors = colors; //guarda los colores del fichas.
         this.glow = glow; //guarda el color del resplandor.
         this.name = name;
         this.imagePath = imagePath;
         this.image = null; //inicialmente null; más adelante se usará para almacenar el objeto Image
         this.imageLoaded = false;
-        //Cada "tipo de planeta" tiene colores, un efecto de resplandor, un nombre y opcionalmente una imagen.
+        //Cada "tipo de fichas" tiene colores, un efecto de resplandor, un nombre y opcionalmente una imagen.
 
         // Cargar imagen si se proporciona una ruta
         if (imagePath) {
@@ -175,10 +175,10 @@ class PegSolitaire {
         this.BOARD_OFFSET_Y = 160; //mismo
         this.GAME_TIME = 300; // 5 minutos deduracion de juego
 
-        // Tipos de planetas
-        this.planetTypes = [
-            new PlanetType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Bart', 'images/bart.png'),
-            new PlanetType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Homero', 'images/homero.png'),
+        // Tipos de fichas
+        this.pieceTypes = [
+            new PieceType(['#ff6b6b', '#ee5a6f'], '#ff6b6b', 'Bart', 'images/bart.png'),
+            new PieceType(['#4ecdc4', '#44a8b3'], '#056dfeff', 'Homero', 'images/homero.png'),
         ];
 
         // Imagen de fondo
@@ -299,9 +299,9 @@ class PegSolitaire {
                 } else if (row === 3 && col === 3) {
                     this.board[row][col] = 0; //La posición central (3,3) está vacía al inicio, representada con 0
                 } else {
-                    this.board[row][col] = Math.floor(Math.random() * this.planetTypes.length) + 1;
-                    //Se elige un número aleatorio entre 1 y planetTypes.length.
-                    //Esto representa qué tipo de ficha/planeta se coloca en esa celda.
+                    this.board[row][col] = Math.floor(Math.random() * this.pieceTypes.length) + 1;
+                    //Se elige un número aleatorio entre 1 y pieceTypes.length.
+                    //Esto representa qué tipo de ficha se coloca en esa celda.
                 }
             }
         }
@@ -418,9 +418,9 @@ drawLegend() {
     this.ctx.fillStyle = 'white';
     this.ctx.font = 'bold 18px Arial';  // Cambio: 16px → 18px (más grande)
     this.ctx.textAlign = 'left';
-    this.ctx.fillText('🎨 LEYENDA', startX, legendY);
+    this.ctx.fillText('Personajes', startX, legendY);
 
-    this.planetTypes.forEach((type, index) => {
+    this.pieceTypes.forEach((type, index) => {
         const y = legendY + 40 + index * 45;  // Cambio: 35 y 32 → 40 y 45 (más espaciado)
 
         // Fondo para cada item (más grande)
@@ -430,8 +430,8 @@ drawLegend() {
         this.ctx.lineWidth = 1;
         this.ctx.strokeRect(startX - 5, y - 22, 180, 40);
 
-        // Dibujar mini planeta usando imagen (igual que en el tablero)
-        this.drawPlanet(startX + 18, y, 16, index, false);  // Cambio: radio 10 → 16, usa drawPlanet
+        // Dibujar mini ficha usando imagen (igual que en el tablero)
+        this.drawPiece(startX + 18, y, 16, index, false);  // Cambio: radio 10 → 16, usa drawPiece
 
         // Texto (más grande)
         this.ctx.fillStyle = 'white';
@@ -473,7 +473,7 @@ drawLegend() {
                 if (this.board[row][col] > 0 && !isBeingDragged) {
                     const centerX = x + this.CELL_SIZE / 2;
                     const centerY = y + this.CELL_SIZE / 2;
-                    this.drawPlanet(centerX, centerY, this.PEG_RADIUS, this.board[row][col] - 1, false);
+                    this.drawPiece(centerX, centerY, this.PEG_RADIUS, this.board[row][col] - 1, false);
                 }
 
                 //Si la celda está vacía (0), dibuja un círculo transparente para mostrar el lugar disponible.
@@ -499,7 +499,7 @@ drawLegend() {
         //Dibuja la ficha seleccionada siguiendo la posición del mouse (dragPosition).
         if (this.selectedPeg && this.isDragging) {
             const typeIndex = this.board[this.selectedPeg.row][this.selectedPeg.col] - 1;
-            this.drawPlanet(this.dragPosition.x, this.dragPosition.y, this.PEG_RADIUS + 5, typeIndex, true);
+            this.drawPiece(this.dragPosition.x, this.dragPosition.y, this.PEG_RADIUS + 5, typeIndex, true);
             //Aumenta ligeramente el tamaño (+5) y le pone en true el isdraggin 
         }
 
@@ -557,7 +557,7 @@ drawLegend() {
             'Eliminar todas las piezas excepto una en el centro.',
             '',
             '🎮 REGLAS',
-            '• Clic en un planeta para seleccionarlo',
+            '• Clic en una pieza para seleccionarla',
             '• Arrastra sobre otra pieza hacia un espacio vacío',
             '• La pieza saltada se elimina',
             '• Solo movimientos horizontales/verticales',
@@ -623,7 +623,7 @@ drawLegend() {
             'Eliminar todas las piezas excepto una en el centro.',
             '',
             '🎮 REGLAS',
-            '• Clic en un planeta para seleccionarlo',
+            '• Clic en una pieza para seleccionarlo',
             '• Arrastra sobre otra pieza hacia un espacio vacío',
             '• La pieza saltada se elimina',
             '• Solo movimientos horizontales/verticales',
@@ -795,11 +795,11 @@ drawLegend() {
         this.ctx.fill();
     }
 
-    drawPlanet(x, y, radius, typeIndex, dragging = false) {
-        const type = this.planetTypes[typeIndex];
+    drawPiece(x, y, radius, typeIndex, dragging = false) {
+        const type = this.pieceTypes[typeIndex];
 
         // Sombra/Glow
-        this.ctx.shadowBlur = dragging ? 30 : 15; //Si el planeta se está arrastrando (dragging = true), el brillo es más intenso
+        this.ctx.shadowBlur = dragging ? 30 : 15; //Si el ficha se está arrastrando (dragging = true), el brillo es más intenso
         this.ctx.shadowColor = type.glow;
 
         // Si tiene imagen cargada, dibujarla
@@ -822,7 +822,7 @@ drawLegend() {
 
             //save() y restore() permiten aislar la máscara para no afectar otros dibujos.
 
-            // Borde del planeta
+            // Borde de ficha
             this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
@@ -852,7 +852,7 @@ drawLegend() {
             gradient.addColorStop(0, type.colors[0]);
             gradient.addColorStop(1, type.colors[1]);
 
-            // Dibujar planeta
+            // Dibujar ficha
             this.ctx.fillStyle = gradient;
             this.ctx.beginPath();
             this.ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -988,7 +988,7 @@ drawLegend() {
 
         if (pegsLeft === 1) {//Detiene el temporizador.
             this.timer.stop();
-            this.showGameOverModal('🎉 ¡VICTORIA!', '¡Felicitaciones! Solo queda un planeta.'); //modal victoria
+            this.showGameOverModal('🎉 ¡VICTORIA!', '¡Felicitaciones! Solo queda una pieza.'); //modal victoria
         } else if (!this.hasValidMoves()) { //Si no hay movimientos válidos (aunque queden varias fichas):
             this.timer.stop();
             this.showGameOverModal('😔 Juego Terminado', `No hay movimientos. Piezas: ${pegsLeft}`); //modal derrota
