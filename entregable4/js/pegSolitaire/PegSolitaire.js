@@ -867,6 +867,7 @@ export class PegSolitaire {
         this.validMoves = []; //No hay movimientos válidos resaltados.
         this.showHelp = false;
         this.showModal = false;
+        if (this.showHints){this.toggleHints();} //Cambia el estado de las ayudas visuales.}
         this.initBoard(); //Reinicia el tablero a su estado inicial.
     }
 
