@@ -70,6 +70,7 @@ export class PegSolitaire {
         );
 
         this.menuButton = new Button(20, 20, 100, 35, '🏠 Menú', () => {  // Cambio: 120x45 → 100x35
+            if (this.showHints){this.toggleHints();}
             this.inStartScreen = true;
             this.showModal = false;
             this.showHelp = false;
@@ -867,7 +868,7 @@ export class PegSolitaire {
         this.validMoves = []; //No hay movimientos válidos resaltados.
         this.showHelp = false;
         this.showModal = false;
-        if (this.showHints){this.toggleHints();} //Cambia el estado de las ayudas visuales.}
+        if (this.showHints){this.toggleHints();} //Cambia el estado de las ayudas visuales.
         this.initBoard(); //Reinicia el tablero a su estado inicial.
     }
 
