@@ -182,7 +182,7 @@
             // Actualizar tuberías
             for (let i = pipes.length - 1; i >= 0; i--) {
                 const pipe = pipes[i];
-                pipe.x -= 4;
+                pipe.x -= 3;
                 pipe.top.style.left = pipe.x + 'px';
                 pipe.bottom.style.left = pipe.x + 'px';
 
@@ -323,7 +323,7 @@
             bird.style.transform = 'rotate(0deg)';
 
             // Crear elementos periódicamente
-            pipeInterval = setInterval(createPipe, 2000);
+            pipeInterval = setInterval(createPipe, 2600);
             coinInterval = setInterval(createCoin, 3000);
             powerupInterval = setInterval(createPowerup, 8000);
             cloudInterval = setInterval(createCloud, 5000);

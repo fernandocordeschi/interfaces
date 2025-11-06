@@ -41,65 +41,36 @@ body {
 #mountains {
     background-image: url(images/mountains.png);
     z-index: 2;
-    animation: parallax1 40s linear infinite;
+    animation: scroll 40s linear infinite;
 }
 
 #clouds {
     background-image: url(images/clouds.png);
     z-index: 3;
-    animation: parallax2 25s linear infinite;
+    animation: scroll 25s linear infinite;
 }
 
 #trees {
     background-image: url(images/trees.png);
     z-index: 4;
-    animation: parallax3 15s linear infinite;
+    animation: scroll 15s linear infinite;
 }
 
 #ground {
     z-index: 5;
-    animation: parallax4 8s linear infinite;
+    animation: scroll 8s linear infinite;
 }
 
-@keyframes parallax1 {
-    0% {
-        transform: translateX(0);
+@keyframes scroll {
+    from {
+        background-position: 0 0;
     }
 
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-@keyframes parallax2 {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
+    to {
+        background-position: -100% 0;
     }
 }
 
-@keyframes parallax3 {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-@keyframes parallax4 {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
 
 /* Pájaro */
 #bird {
