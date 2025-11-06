@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird - Parallax Scroller</title>
+    <link rel="stylesheet" href="fb.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <!-- Capas de Parallax -->
+        <div id="sky" class="parallax-layer"></div>
+        <div id="mountains" class="parallax-layer"></div>
+        <div id="clouds" class="parallax-layer"></div>
+        <div id="trees" class="parallax-layer"></div>
+        <div id="ground" class="parallax-layer"></div>
+
+        <!-- Pájaro -->
+        <div id="bird">
+            <div class="bird-body">
+                <div class="bird-wing"></div>
+                <div class="bird-eye"></div>
+                <div class="bird-beak"></div>
+            </div>
+        </div>
+
+        <!-- UI -->
+        <div id="ui">
+            <div>Puntos: <span id="score">0</span></div>
+            <div>Monedas: <span id="coins">0</span></div>
+        </div>
+        <div id="shield-indicator">🛡️</div>
+
+        <!-- Pantalla de Game Over -->
+        <div id="gameOver">
+            <h1>¡GAME OVER!</h1>
+            <p>Puntuación Final: <span id="finalScore">0</span></p>
+            <p>Monedas Recolectadas: <span id="finalCoins">0</span></p>
+            <button id="restartBtn">REINTENTAR</button>
+        </div>
+
+        <!-- Instrucciones -->
+        <div id="instructions">
+            <h2>🎮 FLAPPY BIRD 🎮</h2>
+            <p>Presiona <strong>ESPACIO</strong> o <strong>CLICK</strong> para volar</p>
+            <p>🪙 Recolecta monedas para aumentar tu puntuación</p>
+            <p>🛡️ Atrapa escudos para protegerte de las tuberías</p>
+            <p>⚠️ Evita chocar con las tuberías</p>
+            <button id="startBtn">COMENZAR</button>
+        </div>
+    </div>
+
+    <script src="fb.js"></script>
+</body>
+</html>
