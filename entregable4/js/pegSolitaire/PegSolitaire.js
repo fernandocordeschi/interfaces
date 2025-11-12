@@ -138,7 +138,7 @@ export class PegSolitaire {
     }
 
     initBoard() {
-        this.board = [];
+        this.board = []; //reinicia el tablero (this.board) como un arreglo vacío.
         for (let row = 0; row < this.BOARD_SIZE; row++) {
             this.board[row] = [];
             for (let col = 0; col < this.BOARD_SIZE; col++) {
@@ -170,23 +170,26 @@ export class PegSolitaire {
             this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
-            this.ctx.fillStyle = '#0a0e27';
+            this.ctx.fillStyle = '#0a0e27'; //Si la imagen no está cargada aún, se usa un color sólido de respaldo
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
 
         // ✨ Estrellas parpadeantes
         const time = Date.now() * 0.005; // velocidad del parpadeo
+        //reduce la velocidad con la que cambia el brillo de las estrellas.
 
         this.stars.forEach((star, i) => {
             // Parpadeo más marcado
-            const flicker = 0.5 + 0.5 * Math.sin(time + i * 2);
+            const flicker = 0.5 + 0.5 * Math.sin(time + i * 2); //Cada estrella tiene una fase distinta (+ i * 2) para que no parpadeen todas juntas
             const alpha = 0.3 + flicker * 0.9; // aumenta contraste
+            //función seno para hacer que la opacidad (alpha) suba y baje suavemente.
 
             // Color central brillante
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`; //Dibuja un punto blanco que representa el núcleo de la estrella.
             this.ctx.fillRect(star.x, star.y, star.size, star.size);
 
             // Halo luminoso (más grande y cálido)
+            //degradado radial centrado en la estrella. Empieza con radio 0 (centro brillante) y se expande hasta star.size * 3
             const gradient = this.ctx.createRadialGradient(
                 star.x + star.size / 2,
                 star.y + star.size / 2,
@@ -290,6 +293,9 @@ export class PegSolitaire {
         });
     }
 
+
+    //se encarga de dibujar todo lo que 
+    //el jugador ve mientras está en partida: fondo, tablero, fichas, botones, leyendas, y ayudas.
     drawBoard() {
         this.drawBackground();
         this.drawTitle();
@@ -345,6 +351,8 @@ export class PegSolitaire {
         }
 
         //Dibuja la ficha seleccionada siguiendo la posición del mouse (dragPosition).
+        //Usa dragPosition (posición actual del mouse) 
+        // y dragOffset (diferencia entre el clic y el centro de la ficha).
         if (this.selectedPeg && this.isDragging) {
             const typeIndex = this.board[this.selectedPeg.row][this.selectedPeg.col] - 1;
             this.drawPiece(
@@ -601,7 +609,7 @@ export class PegSolitaire {
         });
     }
 
-    drawAnimatedArrow(fromX, fromY, toX, toY) { //ace que cada flecha sea animada, pulsante y visible
+    drawAnimatedArrow(fromX, fromY, toX, toY) { //hace que cada flecha sea animada, pulsante y visible
         const angle = Math.atan2(toY - fromY, toX - fromX); //dirección de la flecha desde el punto de origen hacia el destino (en radianes)
         const distance = Math.sqrt((toX - fromX) ** 2 + (toY - fromY) ** 2); //distancia total entre el inicio y el fin del movimiento
 
@@ -665,14 +673,14 @@ export class PegSolitaire {
             this.ctx.beginPath();
             this.ctx.arc(x, y, radius, 0, Math.PI * 2);
             this.ctx.closePath();
-            this.ctx.clip();
+            this.ctx.clip(); //crea una máscara que limita todo lo que se dibuje después a la forma del círculo.
 
             // Dibujar la imagen centrada y escalada
             const size = radius * 2;
             this.ctx.drawImage(type.image, x - radius, y - radius, size, size);
 
             // Restaurar el contexto
-            this.ctx.restore();
+            this.ctx.restore(); //Quita la máscara para que las operaciones posteriores no queden recortadas accidentalmente.
 
             //save() y restore() permiten aislar la máscara para no afectar otros dibujos.
 
@@ -713,6 +721,7 @@ export class PegSolitaire {
             this.ctx.fill();
 
             // Brillo superior
+            //Simula una luz suave reflejada en la parte superior,
             const highlightGradient = this.ctx.createRadialGradient(
                 x - radius / 2, y - radius / 2, 0,
                 x - radius / 2, y - radius / 2, radius / 2
@@ -758,11 +767,14 @@ export class PegSolitaire {
 
         //4 posibles saltos (arriba, abajo, izquierda, derecha).
         const directions = [
-            { dr: -2, dc: 0, jr: -1, jc: 0 },
-            { dr: 2, dc: 0, jr: 1, jc: 0 },
-            { dr: 0, dc: -2, jr: 0, jc: -1 },
-            { dr: 0, dc: 2, jr: 0, jc: 1 }
+            { dr: -2, dc: 0, jr: -1, jc: 0 }, //arriba
+            { dr: 2, dc: 0, jr: 1, jc: 0 }, //abajo
+            { dr: 0, dc: -2, jr: 0, jc: -1 }, //izquierda
+            { dr: 0, dc: 2, jr: 0, jc: 1 } //derecha
         ];
+
+        //dr, dc → el desplazamiento de salto completo (dos casillas en esa dirección).
+        //jr, jc → la posición intermedia (la casilla que se va a saltar).
 
         directions.forEach(dir => {
             const newRow = row + dir.dr;
@@ -770,10 +782,14 @@ export class PegSolitaire {
             const jumpRow = row + dir.jr;
             const jumpCol = col + dir.jc;
 
+            //newRow/newCol: destino después del salto
+            //jumpRow/jumpCol: posición de la ficha que se salta
+
             if (this.isValidPosition(newRow, newCol) &&
                 this.board[newRow][newCol] === 0 &&
                 this.board[jumpRow][jumpCol] > 0) {
-                moves.push(new Move(newRow, newCol, jumpRow, jumpCol));
+                moves.push(new Move(newRow, newCol, jumpRow, jumpCol)); 
+                // se crea un objeto nuevo move y se guarda en el array moves.
             }
         });
 
