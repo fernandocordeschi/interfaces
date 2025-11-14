@@ -11,8 +11,8 @@
         let gameActive = false;
         let birdY = 250;
         let birdVelocity = 0;
-        let gravity = 0.5;
-        let jumpForce = -10;
+        let gravity = 0.16;
+        let jumpForce = -4.2
         let score = 0;
         let coins = 0;
         let hasShield = false;
@@ -43,9 +43,9 @@
 
         // Crear tubería
         function createPipe() {
-            const gap = 180;
-            const minHeight = 100;
-            const maxHeight = 350;
+            const gap = 240;
+            const minHeight = 80;
+            const maxHeight = 440;
             const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
 
             const pipeTop = document.createElement('div');
@@ -182,7 +182,7 @@
             // Actualizar tuberías
             for (let i = pipes.length - 1; i >= 0; i--) {
                 const pipe = pipes[i];
-                pipe.x -= 3;
+                pipe.x -= 2.8;
                 pipe.top.style.left = pipe.x + 'px';
                 pipe.bottom.style.left = pipe.x + 'px';
 
@@ -250,7 +250,7 @@
             // Actualizar power-ups
             for (let i = powerups.length - 1; i >= 0; i--) {
                 const powerup = powerups[i];
-                powerup.x -= 4;
+                powerup.x -= 4.3;
                 powerup.element.style.left = powerup.x + 'px';
 
                 // Colisión con power-ups
@@ -322,14 +322,20 @@
             bird.classList.remove('bird-explode');
             bird.style.transform = 'rotate(0deg)';
 
+            setTimeout(() => {
+                createPipe();
+
+                // Recién después comienza el intervalo normal
+                pipeInterval = setInterval(createPipe, 2600);
+
+            }, 1500);
+
             // Crear elementos periódicamente
-            pipeInterval = setInterval(createPipe, 2600);
             coinInterval = setInterval(createCoin, 3000);
             powerupInterval = setInterval(createPowerup, 8000);
             cloudInterval = setInterval(createCloud, 5000);
 
             // Crear algunos elementos iniciales
-            setTimeout(createPipe, 1500);
             setTimeout(createCoin, 2500);
             setTimeout(createCloud, 1000);
 
