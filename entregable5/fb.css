@@ -63,7 +63,7 @@ body {
 }
 
 #Sky_back_mountain {
-    background-image: url(images/sky_front_mountain.png);
+    background-image: url(images/sky_back_mountain.png);
     z-index: 3;
     animation: scroll 30s linear infinite;
 }
