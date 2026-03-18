@@ -34,7 +34,7 @@ cd TP-Interfaces
 3. 🌐 Abrir el index.html en tu navegador.
 
 
-📂 4. Estructura de carpetas del proyecto:
+🗂️ 4. Estructura de carpetas del proyecto:
    
 TP-Interfaces/
 ├── assets/
